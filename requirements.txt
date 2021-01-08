@@ -1,0 +1,16 @@
+# For installing everything at one run `pip install -r /path/to/requirements.txt`, where you of course have to fill in the path yourself.
+
+altgraph==0.17
+click==7.1.2
+Flask==1.1.2
+future==0.18.2
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+pefile==2019.4.18
+pywin32-ctypes==0.2.0
+Werkzeug==1.0.1
+
+# Optional (only for generating distribution)
+pyinstaller==4.1
+pyinstaller-hooks-contrib==2020.11

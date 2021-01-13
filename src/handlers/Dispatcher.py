@@ -1,5 +1,5 @@
-from ..helpers.SingletonHelper import Singleton
-from ..models.EventTypeEnum import EventType
+from src.helpers.SingletonHelper import Singleton
+from src.models import AbstractEventRequestData
 
 
 class Dispatcher(metaclass=Singleton):
@@ -7,16 +7,15 @@ class Dispatcher(metaclass=Singleton):
     The dispatcher links events to their corresponding triggers and fires them.
     """
 
-    def handle(self, data):
+    def handle(self, data: AbstractEventRequestData):
         """
         Based on the event type of the parsed data, this function triggers the corresponding events.
         :param data:    the parsed data.
-        # TODO data needs to be of some abstract datatype (still have to figure out what)
         """
 
-        # Log arrival of data TODO extent when datatype is determined
-        print("Received dispatcher data of type " + type(data))
+        # Log arrival of data
+        print("Received dispatcher data of type " + data.get_event_type().name)
 
         # Loop over all events that need to be triggered for the EventType of the data
-        for event in EventType[data.eventType]:
-            data = event.handle(data.eventType, data)
+        for event in data.get_event_type().value:
+            data = event.handle(data)

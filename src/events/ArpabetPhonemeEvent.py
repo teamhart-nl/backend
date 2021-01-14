@@ -1,9 +1,8 @@
 from src.events.AbstractEvent import AbstractEvent
 from src.helpers.Logger import Logger
+from src.models.request_data.AbstractRequest import AbstractRequest
 
 import nltk
-
-from src.models.request_data.AbstractRequest import AbstractRequest
 
 
 class ArpabetPhonemeEvent(AbstractEvent):
@@ -19,6 +18,7 @@ class ArpabetPhonemeEvent(AbstractEvent):
             self.arpabet = nltk.corpus.cmudict.dict()
 
     def handle(self, request_data: AbstractRequest):
+
         # TODO check for type of request
         # if type(request_data) != type(PhonemeTransformRequest):
         #     raise ValueError("ArpabetPhonemeEvent.handle: request_data is of type " + str(type(request_data)))

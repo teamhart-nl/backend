@@ -1,9 +1,9 @@
 from src.events.AbstractEvent import AbstractEvent
 from src.helpers.Logger import Logger
-from src.models.request_data import PhonemeTransformRequest
-# from src.models.EventTypeEnum import EventType
 
 import nltk
+
+from src.models.request_data.AbstractRequest import AbstractRequest
 
 
 class ArpabetPhonemeEvent(AbstractEvent):
@@ -18,12 +18,12 @@ class ArpabetPhonemeEvent(AbstractEvent):
             nltk.download('cmudict')
             self.arpabet = nltk.corpus.cmudict.dict()
 
-    def handle(self, event_type, request_data: AbstractEvent):
-        # TODO will probably have to change this in the future
-        if type(request_data) != type(PhonemeTransformRequest):
-            raise ValueError("ArpabetPhonemeEvent.handle: request_data is of type " + str(type(request_data)))
+    def handle(self, request_data: AbstractRequest):
+        # TODO check for type of request
+        # if type(request_data) != type(PhonemeTransformRequest):
+        #     raise ValueError("ArpabetPhonemeEvent.handle: request_data is of type " + str(type(request_data)))
 
-        request_data.sentences = []
+        request_data.phonemes = []
         for sentence in request_data.sentences:
             sentence_in_phonemes = []
             for word in sentence.split():
@@ -34,6 +34,6 @@ class ArpabetPhonemeEvent(AbstractEvent):
                     Logger.log_warning("ArpabetPhonemeEvent.handle: Word '" + str(word).lower()
                                        + "' was not found in Arpabet dictionary.")
 
-            request_data.sentences.append(sentence_in_phonemes)
+            request_data.phonemes.append(sentence_in_phonemes)
 
-        print(request_data.sentences)
+        print(request_data.phonemes)

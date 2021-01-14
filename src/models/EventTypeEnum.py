@@ -1,6 +1,6 @@
 from enum import Enum
 
-from src.events import ArpabetPhonemeEvent
+from src.events.ArpabetPhonemeEvent import ArpabetPhonemeEvent
 
 
 class EventType(Enum):

@@ -17,5 +17,5 @@ class Dispatcher(metaclass=Singleton):
         print("Received dispatcher data of type " + data.get_event_type().name)
 
         # Loop over all events that need to be triggered for the EventType of the data
-        for event in data.get_event_type().value:
-            data = event.handle(data)
+        for event in data.get_event_type().value[0]:
+            data = event().handle(data)

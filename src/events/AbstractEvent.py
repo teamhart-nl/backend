@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.models.request_data import AbstractRequestData
+from src.models.request_data import AbstractRequest
 from src.models.EventTypeEnum import EventType
 
 
@@ -10,7 +10,7 @@ class AbstractEvent(ABC):
     """
 
     @abstractmethod
-    def handle(self, event_type: EventType, request_data: AbstractRequestData):
+    def handle(self, event_type: EventType, request_data: AbstractRequest):
         """
         Handles the event based on the given data.
         TODO determine if we need an object to pass around of some 'processed data' type or something like that

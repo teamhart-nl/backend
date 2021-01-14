@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from src.models.EventTypeEnum import EventType
 
 
-class AbstractEventRequestData(ABC):
+class AbstractRequest(ABC):
     """
     AbstractEventRequestData is an abstract class for all processing requests that will eventually be send to the
     dispatcher.

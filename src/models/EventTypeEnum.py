@@ -1,5 +1,7 @@
 from enum import Enum
 
+from src.events import ArpabetPhonemeEvent
+
 
 class EventType(Enum):
     """
@@ -7,4 +9,7 @@ class EventType(Enum):
     """
 
     # TODO list should be filled with events
-    COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION = []
+    COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION = [],
+    TRANSFORM_TEXT_INTO_PHONEMES = [
+        ArpabetPhonemeEvent
+    ],

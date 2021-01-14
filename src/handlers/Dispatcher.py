@@ -1,5 +1,5 @@
 from src.helpers.SingletonHelper import Singleton
-from src.models import AbstractRequestData
+from src.models.request_data import AbstractRequest
 
 
 class Dispatcher(metaclass=Singleton):
@@ -7,7 +7,7 @@ class Dispatcher(metaclass=Singleton):
     The dispatcher links events to their corresponding triggers and fires them.
     """
 
-    def handle(self, data: AbstractRequestData):
+    def handle(self, data: AbstractRequest):
         """
         Based on the event type of the parsed data, this function triggers the corresponding events.
         :param data:    the parsed data.

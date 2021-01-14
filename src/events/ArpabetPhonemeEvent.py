@@ -1,5 +1,5 @@
 from src.events.AbstractEvent import AbstractEvent
-from src.models import AbstractRequestData
+from src.models.request_data import AbstractRequestData
 from src.models.EventTypeEnum import EventType
 
 import nltk

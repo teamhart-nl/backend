@@ -2,7 +2,7 @@ import pkgutil
 from typing import Dict, List
 import os, importlib
 
-
+from src.helpers.Logger import Logger
 from src import events
 from src.events import AbstractEvent as AE
 from src.events.AbstractEvent import AbstractEvent
@@ -43,6 +43,8 @@ class Dispatcher(metaclass=Singleton):
         for event_list in self.event_type_map.values():
             event_list.sort(key=lambda x: x.get_priority(), reverse=True)
 
+        Logger.log_info("Dispatcher has been initialized.")
+
     def handle(self, data: AbstractRequest) -> None:
         """
         Based on the event type of the parsed data, this function triggers the corresponding events.
@@ -50,7 +52,7 @@ class Dispatcher(metaclass=Singleton):
         """
 
         # Log arrival of data
-        print("Received dispatcher data of type " + data.get_event_type().name)
+        Logger.log_info("Received dispatcher data of type " + data.get_event_type().name)
 
         # Loop over all events that need to be triggered for the EventType of the data
         for event in self.event_type_map[data.get_event_type().name]:

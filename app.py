@@ -5,6 +5,7 @@ from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequ
 
 app = Flask(__name__)
 
+dispatcher = Dispatcher()
 
 @app.route('/')
 def hello_world():
@@ -14,9 +15,7 @@ def hello_world():
 @app.route('/print/', methods=['POST'])
 def test():
     if request.method == 'POST':
-        print(request.form['text'])
 
-        dispatcher = Dispatcher()
         phoneme_request = PhonemeTransformRequest()
         phoneme_request.sentences = [request.form['text']]
         dispatcher.handle(phoneme_request)

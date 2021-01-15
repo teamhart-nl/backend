@@ -1,15 +1,15 @@
 from enum import Enum
 
-from src.events.ArpabetPhonemeEvent import ArpabetPhonemeEvent
-
 
 class EventType(Enum):
     """
-    Enum for all event types, and their associations to an ordered list of concrete events.
+    Enum for all event types.
     """
 
-    # TODO list should be filled with events
-    COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION = [],
-    TRANSFORM_TEXT_INTO_PHONEMES = [
-        ArpabetPhonemeEvent
-    ],
+    COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION = 1,
+    TRANSFORM_TEXT_INTO_PHONEMES = 2
+
+    @staticmethod
+    def get_all_event_types():
+        # TODO type this
+        return list(map(lambda c: c, EventType))

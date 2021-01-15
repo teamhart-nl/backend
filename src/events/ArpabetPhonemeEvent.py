@@ -1,3 +1,4 @@
+from src.models.EventTypeEnum import EventType
 from src.events.AbstractEvent import AbstractEvent
 from src.helpers.Logger import Logger
 from src.models.request_data.AbstractRequest import AbstractRequest
@@ -9,6 +10,8 @@ class ArpabetPhonemeEvent(AbstractEvent):
     """
     Transforms an English sentence into phonemes
     """
+
+    PRIORITY: int = 100
 
     def __init__(self):
         try:
@@ -37,3 +40,13 @@ class ArpabetPhonemeEvent(AbstractEvent):
             request_data.phonemes.append(sentence_in_phonemes)
 
         print(request_data.phonemes)
+
+    @staticmethod
+    def get_priority() -> int:
+        return ArpabetPhonemeEvent.PRIORITY
+
+    @staticmethod
+    def get_compatible_events() -> [EventType]:
+        return [
+            EventType.TRANSFORM_TEXT_INTO_PHONEMES
+        ]

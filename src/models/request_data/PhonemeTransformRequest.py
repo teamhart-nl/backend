@@ -13,5 +13,5 @@ class PhonemeTransformRequest(AbstractRequest):
 
         self.sentences = sentences
 
-    def get_event_type(self):
+    def get_event_type(self) -> EventType:
         return EventType.TRANSFORM_TEXT_INTO_PHONEMES

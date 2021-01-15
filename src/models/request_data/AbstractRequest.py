@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 # from src.models.EventTypeEnum import EventType
+from models.EventTypeEnum import EventType
 
 
 class AbstractRequest(ABC):
@@ -10,7 +11,7 @@ class AbstractRequest(ABC):
     """
 
     @abstractmethod
-    def get_event_type(self):
+    def get_event_type(self) -> EventType:
         """
         In concrete classes, this method should return the event type based on the data provided in the request, which
         is then part of this object.

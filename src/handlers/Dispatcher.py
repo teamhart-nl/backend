@@ -1,7 +1,6 @@
 import pkgutil
 from typing import Dict, List
 import os, importlib
-from glob import glob
 
 
 from src import events
@@ -14,26 +13,35 @@ from src.models.request_data import AbstractRequest
 
 class Dispatcher(metaclass=Singleton):
     """
-    The dispatcher links events to their corresponding triggers and fires them.
+    The dispatcher links events to their corresponding triggers and fires them. Extends on Singleton helper, thus there
+    exists only one dispatcher object at all times.
     """
 
+    """event_type_map maps every event type to a list of Events. List is initialized upon first creation of the
+    Dispatcher."""
     event_type_map: Dict[EventType, List]
 
     def __init__(self):
+        # Initialize event_type_map
         self.event_type_map = {}
 
-        for event_type in EventType.get_all_event_types():
+        # For each event_type, add an instance to the dictionary
+        for event_type in EventType:
             self.event_type_map[event_type.name] = []
 
+        # Import all events in the events module
         for (module_loader, name, ispk) in pkgutil.iter_modules([os.path.dirname(AE.__file__)]):
             importlib.import_module('.' + name, events.__name__)
 
+        # Loop through all events that extend AbstractEvent
         for event_class in AbstractEvent.__subclasses__():
+            # Check which event_types they belong to and add them to the lists in the event_type_map
             for event_type in event_class.get_compatible_events():
                 self.event_type_map.get(event_type.name).append(event_class)
 
-        for l in self.event_type_map.values():
-            l.sort(key=lambda x: x.get_priority())
+        # Sort the lists (values) in the event_type_map on priority (reversed, thus high priority first)
+        for event_list in self.event_type_map.values():
+            event_list.sort(key=lambda x: x.get_priority(), reverse=True)
 
     def handle(self, data: AbstractRequest) -> None:
         """

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-# from src.models.EventTypeEnum import EventType
-from models.EventTypeEnum import EventType
+
+from src.models.EventTypeEnum import EventType
 
 
 class AbstractRequest(ABC):

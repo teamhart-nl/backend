@@ -1,4 +1,7 @@
 class Logger:
+    """
+    Logger can be used to log data in a standardized fashion
+    """
 
     @staticmethod
     def log_info(text) -> None:

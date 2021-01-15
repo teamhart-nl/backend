@@ -25,8 +25,8 @@ class ArpabetPhonemeEvent(AbstractEvent):
     def handle(self, request_data: AbstractRequest):
 
         # TODO should probably change in the future
-        if type(request_data) != type(PhonemeTransformRequest):
-            raise ValueError("ArpabetPhonemeEvent.handle: request_data is of type " + str(type(request_data)))
+        if not isinstance(request_data, PhonemeTransformRequest):
+            raise ValueError("ArpabetPhonemeEvent.handle: request_data is of type " + str(type(request_data)) + ".")
 
         # Initialize list for phonemes.
         request_data.phonemes = []

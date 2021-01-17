@@ -3,8 +3,8 @@ from enum import Enum
 
 class EventType(Enum):
     """
-    Enum for all event types, and their associations to an ordered list of concrete events.
+    Enum for all event types.
     """
 
-    # TODO list should be filled with events
-    COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION = []
+    COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION = 1,
+    TRANSFORM_TEXT_INTO_PHONEMES = 2

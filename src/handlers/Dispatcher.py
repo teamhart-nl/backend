@@ -57,8 +57,10 @@ class Dispatcher(metaclass=Singleton):
         # Loop over all events that need to be triggered for the EventType of the data
         for event in self.event_type_map[data.get_event_type().name]:
             try:
+                # Try to handle the event
                 data = event().handle(data)
             except Exception as e:
+                # Catch and report exception
                 Logger.log_warning("FATAL ERROR! Stopping event excecution")
                 Logger.log_warning("Stopped event was of type " + str(type(event)))
                 print(e)

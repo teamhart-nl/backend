@@ -3,6 +3,7 @@ from models.request_data.AbstractRequest import AbstractRequest
 
 from google.cloud import speech
 
+
 class TranscribeRequest(AbstractRequest):
     """
     Request type for a transformation that includes a transcription from an Audio file to sentences
@@ -20,11 +21,11 @@ class TranscribeRequest(AbstractRequest):
     # Transcription
     sentences: [str]
 
-    def __init__(self, path: str, spoken_language: str):
-        if not path or path == "":
-            raise ValueError("TranscribeRequest.__init__: path variable is " + path)
+    def __init__(self, path_to_local_audio_file: str, spoken_language: str):
+        if not path_to_local_audio_file or path_to_local_audio_file == "":
+            raise ValueError("TranscribeRequest.__init__: path variable is " + path_to_local_audio_file)
 
-        self.path = path
+        self.path = path_to_local_audio_file
         self.sentences = []
 
         self.audio_type = speech.RecognitionConfig.AudioEncoding.FLAC

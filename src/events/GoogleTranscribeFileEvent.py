@@ -26,19 +26,24 @@ class GoogleTranscribeEvent(AbstractEvent):
             raise AssertionError("GoogleTranscribeEvent.handle: make sure to authenticate with the Google API by "
                                  "setting your credentials correctly.")
 
-        #
+        # Check if the request_data is of type TranscribeRequest
         if not isinstance(request_data, TranscribeRequest):
             raise ValueError("GoogleTranscribeEvent.handle: request_data is of type " + str(type(request_data)) + ".")
 
+        # Open the audio file
         with io.open(request_data.path, "rb") as audio_file:
             content = audio_file.read()
 
+        # Get audio content
         audio = speech.RecognitionAudio(content=content)
+
+        # Set audio configuration
         config = speech.RecognitionConfig(
             request_data.audio_type,
             language_code=request_data.spoken_language
         )
 
+        # Get Google API response
         response = self.client.recognize(config=config, audio=audio)
 
         # Each result is for a consecutive portion of the audio. Iterate through

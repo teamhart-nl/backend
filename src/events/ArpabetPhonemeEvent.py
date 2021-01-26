@@ -23,8 +23,7 @@ class ArpabetPhonemeEvent(AbstractEvent):
             self.arpabet = nltk.corpus.cmudict.dict()
 
     def handle(self, request_data: AbstractRequest):
-
-        # TODO should probably change in the future
+        # Check if the request)data is of type PhonemeTransformRequest
         if not isinstance(request_data, PhonemeTransformRequest):
             raise ValueError("ArpabetPhonemeEvent.handle: request_data is of type " + str(type(request_data)) + ".")
 
@@ -48,9 +47,11 @@ class ArpabetPhonemeEvent(AbstractEvent):
             # Add transformation of sentence to list of sentences
             request_data.phonemes.append(sentence_in_phonemes)
 
-        # TODO probably will remove this at some point
-        print(request_data.phonemes)
+        # Log completion information
+        Logger.log_info("Completed ArpabetPhonemeEvent with phonemes:")
+        Logger.log_info(request_data.phonemes)
 
+        # Return request data
         return request_data
 
     @staticmethod
@@ -60,5 +61,6 @@ class ArpabetPhonemeEvent(AbstractEvent):
     @staticmethod
     def get_compatible_events() -> [EventType]:
         return [
-            EventType.TRANSFORM_TEXT_INTO_PHONEMES
+            EventType.TRANSFORM_TEXT_INTO_PHONEMES,
+            EventType.COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION
         ]

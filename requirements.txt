@@ -6,6 +6,9 @@ Flask==1.1.2
 Flask-Cors==3.0.10
 future==0.18.2
 google-cloud==0.34.0
+google-cloud-translate==3.0.2
+google-cloud-speech==2.0.1
+google-cloud-storage==1.35.0
 itsdangerous==1.1.0
 Jinja2==2.11.2
 joblib==1.0.0

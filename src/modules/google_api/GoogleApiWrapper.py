@@ -8,10 +8,15 @@ from helpers.SingletonHelper import Singleton
 
 
 class GoogleApiWrapper(metaclass=Singleton):
+    """
+    Wrapper for authenticating with the Google API.
+    """
 
+    # Stores whether the Google API is authenticated correctly
     authenticated: bool = False
 
     def __init__(self):
+        # Check if the Google API is set up correctly
         self.checkGoogleApiConnection()
 
     def checkGoogleApiConnection(self):

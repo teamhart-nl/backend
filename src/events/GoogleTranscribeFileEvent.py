@@ -20,10 +20,13 @@ class GoogleTranscribeEvent(AbstractEvent):
         self.client = speech.SpeechClient()
 
     def handle(self, request_data: AbstractRequest):
+
+        # Check if the google api wrapper is authenticated
         if not GoogleApiWrapper().authenticated:
             raise AssertionError("GoogleTranscribeEvent.handle: make sure to authenticate with the Google API by "
                                  "setting your credentials correctly.")
 
+        #
         if not isinstance(request_data, TranscribeRequest):
             raise ValueError("GoogleTranscribeEvent.handle: request_data is of type " + str(type(request_data)) + ".")
 

@@ -10,6 +10,9 @@ from helpers.SingletonHelper import Singleton
 class GoogleApiWrapper(metaclass=Singleton):
     """
     Wrapper for authenticating with the Google API.
+    Does not check for whether the Google API is installed.
+    Only checks for whether it can authenticate.
+    TODO be able to (cross-os) check whether Google API is installed
     """
 
     # Stores whether the Google API is authenticated correctly

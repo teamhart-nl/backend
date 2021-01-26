@@ -57,5 +57,6 @@ class GoogleTranscribeEvent(AbstractEvent):
     @staticmethod
     def get_compatible_events() -> [EventType]:
         return [
-            EventType.TRANSCRIBE_USING_GOOGLE_API
+            EventType.TRANSCRIBE_USING_GOOGLE_API,
+            EventType.COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION
         ]

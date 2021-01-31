@@ -25,5 +25,37 @@ def test():
         return '200'
 
 
+#routes
+#GET pattern for a phoneme
+#param 
+
+#GET phonemes for sentence
+#described above
+
+#GET status of arduino
+#result: arduino status, motor status? idk if that accessible
+
+#POST phonemes for a given sentence
+#param: sl
+#param: tl
+#body: sentence
+#returns: phonemes (or patterns?)
+#effects: arduino fires full sentence
+
+#GET list of phonemes
+#phonemes with identifiable ID's 
+
+#GET stop arduino
+#effects: stops all motors from firing
+
+#GEt test arduino
+#effects: buzzes all motors
+
+#POST send single phoneme 
+#param: uniquely identifiable phoneme
+#returns: success or notFound
+#effects: arduino
+
+
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)

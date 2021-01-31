@@ -3,8 +3,8 @@ import os
 from google.auth.exceptions import DefaultCredentialsError
 from google.cloud import storage
 
-from helpers.Logger import Logger
-from helpers.SingletonHelper import Singleton
+from src.helpers.Logger import Logger
+from src.helpers.SingletonHelper import Singleton
 
 
 class GoogleApiWrapper(metaclass=Singleton):

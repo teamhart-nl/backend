@@ -1,5 +1,5 @@
-from models.EventTypeEnum import EventType
-from models.request_data.AbstractRequest import AbstractRequest
+from src.models.EventTypeEnum import EventType
+from src.models.request_data.AbstractRequest import AbstractRequest
 
 from google.cloud import speech
 

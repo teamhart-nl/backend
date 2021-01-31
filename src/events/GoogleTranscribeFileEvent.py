@@ -1,10 +1,10 @@
 import io
 
-from events.AbstractEvent import AbstractEvent
-from models.EventTypeEnum import EventType
-from models.request_data.AbstractRequest import AbstractRequest
-from models.request_data.TranscribeRequest import TranscribeRequest
-from modules.google_api.GoogleApiWrapper import GoogleApiWrapper
+from src.events.AbstractEvent import AbstractEvent
+from src.models.EventTypeEnum import EventType
+from src.models.request_data.AbstractRequest import AbstractRequest
+from src.models.request_data.TranscribeRequest import TranscribeRequest
+from src.modules.google_api.GoogleApiWrapper import GoogleApiWrapper
 
 from google.cloud import speech
 

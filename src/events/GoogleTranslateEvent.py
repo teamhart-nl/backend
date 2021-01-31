@@ -1,13 +1,13 @@
-from events.AbstractEvent import AbstractEvent
+from src.events.AbstractEvent import AbstractEvent
 
 from google.cloud import translate_v2 as translate
 import six
 
-from helpers.Logger import Logger
-from models.EventTypeEnum import EventType
-from models.request_data.AbstractRequest import AbstractRequest
-from models.request_data.TranslateRequest import TranslateRequest
-from modules.google_api.GoogleApiWrapper import GoogleApiWrapper
+from src.helpers.Logger import Logger
+from src.models.EventTypeEnum import EventType
+from src.models.request_data.AbstractRequest import AbstractRequest
+from src.models.request_data.TranslateRequest import TranslateRequest
+from src.modules.google_api.GoogleApiWrapper import GoogleApiWrapper
 
 
 class GoogleTranslateEvent(AbstractEvent):

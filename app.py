@@ -9,12 +9,6 @@ CORS(app)
 
 dispatcher = Dispatcher()
 
-
-@app.route('/')
-def hello_world():
-    return render_template('home.html')
-
-
 @app.route('/vue-test')
 def vue_test():
     return {"greeting": "Hello from Flask!"}

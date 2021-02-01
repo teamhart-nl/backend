@@ -39,12 +39,13 @@ def phonemes():
     fp = os.getcwd() + '\\resources\\phoneme_patterns' #resource folder for patterns of phonemes
 
     #loop through all 
-    for file in os.listdir():
+    for file in os.listdir(fp):
         phoneme = file.replace(".json", "")
+        
         if phoneme in CMUPhonemes: #CMUPhonemes are the phonemes supported in nltk.cmudict()
             available.append(phoneme)
         else:
-            print("WRONG JSON")
+            print(phoneme + ' is not a valid phoneme name')
 
     return jsonify({'phonemes' : available}), 200
 

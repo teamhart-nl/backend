@@ -12,44 +12,15 @@ If you want to generate a distribution executable (for perception cluster), this
 <details>
 <summary>/phonemes</summary>
 
+get the phonemes which can be send to the microcontroller
 
 REQUEST:
 
     GET /api/v1/phonemes
 
-RESULT:
+EXAMPLE RESULT:
 
-    {a collection of uniquely identifiable ids}
-
-</details>
-
-### Patterns
-<details>
-<summary>/patterns/</summary>
-
-
-REQUEST:
-
-    GET /api/v1/phonemes/
-
-RESULT:
-
-    {the vibrational patterns of each phoneme}
-
-</details>
-
-
-<details>
-<summary>/patterns/phoneme</summary>
-
-
-REQUEST:
-
-    GET /api/v1/patterns/phoneme
-
-RESULT:
-
-    {get the w}
+    {'phonemes' : ['K', 'AE', 'A']}
 
 </details>
 
@@ -58,6 +29,7 @@ RESULT:
 <details>
 <summary>/microcontroller/status</summary>
 
+//NOT IMPLEMENTED
 
 REQUEST:
 
@@ -72,6 +44,7 @@ RESULT:
 <details>
 <summary>/microcontroller/stop</summary>
 
+//NOT IMPLEMENTED
 Stop all haptic activity on the microcontroller.
 
 REQUEST:
@@ -87,18 +60,23 @@ RESULT:
 <details>
 <summary>/microcontroller/phoneme</summary>
 
+//NOT IMPLEMENTED
 Send a phoneme to the microcontroller directly
 
 REQUEST:
 
-    POST /api/v1/microcontroller/stop
+    POST /api/v1/microcontroller/phonemes
 
-BODY:
+BODY
 
-    {collection of at least one phoneme}
+    {'phonemes': ['K', 'L']}
+
+EXAMPLE CURL (windows)
+
+    curl -H "Content-Type: application/json" -d "{ \"phonemes\": [\"K\", \"L\"] }" http://localhost:5000/api/v1/microcontroller/phonemes
 
 RESULT:
 
-    {succes or nah}
+    200 if OK
 
 </details>

@@ -6,6 +6,8 @@ from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequ
 from src.models.CMUPhonemes import CMUPhonemes
 
 import os
+import json
+from functools import wraps
 
 app = Flask(__name__)
 CORS(app)
@@ -14,25 +16,47 @@ dispatcher = Dispatcher()
 
 BASE_URL = '/api/v1'
 
+#Wrapper for json posts
+def validate_json(f):
+    @wraps(f)
+    def wrapper(*args, **kw):
+        try:
+            data = request.json
+        except Exception: #problem reading in json
+            msg = "payload must be a valid json"
+            return jsonify({"error": msg}), 400
+        if data is None:  #empty while json is expected
+            msg = "payload must be a valid json"
+            return jsonify({"error": msg}), 400
+        else:    
+            return f(*args, **kw)
+    return wrapper
+
 ## API routes
 @app.route(BASE_URL + '/phonemes')
 def phonemes():
-    available = []
-    for file in os.listdir(os.getcwd() + '\\resources\\phoneme_patterns'):
+    available = [] #list of available phonemes
+    fp = os.getcwd() + '\\resources\\phoneme_patterns' #resource folder for patterns of phonemes
+
+    #loop through all 
+    for file in os.listdir():
         phoneme = file.replace(".json", "")
-        if phoneme in CMUPhonemes:
+        if phoneme in CMUPhonemes: #CMUPhonemes are the phonemes supported in nltk.cmudict()
             available.append(phoneme)
+        else:
+            print("WRONG JSON")
 
     return jsonify({'phonemes' : available}), 200
 
 @app.route(BASE_URL + '/microcontroller/phonemes', methods=['POST'])
+@validate_json
 def send_phonemes():
-    if request.method == 'POST':
+        data = request.json
 
-        for phoneme in list(request.form['phonemes']):
+        for phoneme in data['phonemes']: #issue events to micrcontroller
             print("TODO: add SendPhonemeEvent {} to the Dispatcher".format(phoneme))
 
-        return '200'
+        return "", 200
 
 ##For testing
 @app.route('/vue-test')

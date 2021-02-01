@@ -9,6 +9,8 @@ CORS(app)
 
 dispatcher = Dispatcher()
 
+BASE_URL = "/api/v1/"
+
 @app.route('/vue-test')
 def vue_test():
     return {"greeting": "Hello from Flask!"}

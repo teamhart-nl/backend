@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 from src.handlers.Dispatcher import Dispatcher
@@ -14,9 +14,30 @@ dispatcher = Dispatcher()
 
 BASE_URL = '/api/v1'
 
+## API routes
+@app.route(BASE_URL + '/phonemes')
+def phonemes():
+    available = []
+    for file in os.listdir(os.getcwd() + '\\resources\\phoneme_patterns'):
+        phoneme = file.replace(".json", "")
+        if phoneme in CMUPhonemes:
+            available.append(phoneme)
+
+    return jsonify({'phonemes' : available}), 200
+
+@app.route(BASE_URL + '/microcontroller/phonemes', methods=['POST'])
+def send_phonemes():
+    if request.method == 'POST':
+
+        for phoneme in list(request.form['phonemes']):
+            print("TODO: add SendPhonemeEvent {} to the Dispatcher".format(phoneme))
+
+        return '200'
+
+##For testing
 @app.route('/vue-test')
 def vue_test():
-    return {"greeting": "Hello from Flask!"}
+    return {"greeting": "From Flask, With Love"}
 
 
 @app.route(BASE_URL + '/print/', methods=['POST'])
@@ -28,16 +49,6 @@ def test():
         dispatcher.handle(phoneme_request)
 
         return '200'
-
-@app.route(BASE_URL + '/phonemes')
-def phonemes():
-    available = []
-    for file in os.listdir(os.getcwd() + '\\resources\\phoneme_patterns'):
-        phoneme = file.replace(".json", "")
-        if phoneme in CMUPhonemes:
-            available.append(phoneme)
-
-    return {'phonemes' : available}, 200
 
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)

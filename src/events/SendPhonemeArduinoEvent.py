@@ -3,6 +3,7 @@ from src.models.EventTypeEnum import EventType
 from src.events.AbstractEvent import AbstractEvent
 from src.helpers.Logger import Logger
 from src.models.request_data.AbstractRequest import AbstractRequest
+from src.modules.ArduinoConnection import ArduinoConnection
 
 
 class SendPhonemeArduinoEvent(AbstractEvent):

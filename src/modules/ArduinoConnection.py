@@ -1,7 +1,7 @@
 from src.helpers.Logger import Logger
 from src.helpers.SingletonHelper import Singleton
 
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 import serial
 import serial.tools.list_ports
@@ -14,6 +14,15 @@ class ArduinoConnection(metaclass=Singleton):
     #maps coord in the phoneme pattern jsons to the id of the motor from specific arduino
     self.mapping : Dict[int, int]
 
+    #whether backend in debug (so no connected arduino)
+    self.debug : bool
+
+    #baudrate for connected arduino
+    self.baudrate : int
+
+    #list of serials of known arduinos (should include current connected arduino)
+    self.serials : List[str]
+
     '''
     establish connection with arduino
 
@@ -24,7 +33,8 @@ class ArduinoConnection(metaclass=Singleton):
         self.parse_config_JSON(config_file) 
 
         #set found device
-        self.device = serial.Serial(self.find_arduino_port(), baudrate=self.baudrate)
+        if not self.debug:
+            self.device = serial.Serial(self.find_arduino_port(), baudrate=self.baudrate)
 
     '''
     parse the config json file 
@@ -41,6 +51,8 @@ class ArduinoConnection(metaclass=Singleton):
         self.serials = config['serials']
         #baudrate that is used in arduino
         self.baudrate = config['baudrate']
+        #debug mode or not
+        self.debug = (config['mode'] == 'debug')
 
     '''
     finds the first port with an arduino connected with known serial number
@@ -51,6 +63,7 @@ class ArduinoConnection(metaclass=Singleton):
                 return port_info.device
         else:
             raise IOError('Could not find a known Arduino, is it plugged in and set as known serial number?')
+        
 
     '''
     send pattern for a phoneme to arduino
@@ -68,8 +81,12 @@ class ArduinoConnection(metaclass=Singleton):
     '''
     def query(self, message : str) -> str:
         # Send message to Arduino.
-        self.device.write(message.encode('ascii'))
+        if not self.debug:
+            self.device.write(message.encode('ascii'))
 
-        # Make sure the Arduino always gives an output, otherwise Python will wait forever.
-        line = self.device.readline().decode('ascii').strip()
+            # Make sure the Arduino always gives an output, otherwise Python will wait forever.
+            line = self.device.readline().decode('ascii').strip()
+        else:
+            Logger.log_info("ArduinoConnection.query: A would have now arrived at the arduino")
+            line = ""
         return line

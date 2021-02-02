@@ -1,12 +1,19 @@
+from src.helpers.Logger import Logger
+from src.helpers.SingletonHelper import Singleton
+
 from typing import Dict, Any
 
 import serial
 import serial.tools.list_ports
 
 '''
-represents a current connection with an arduino
+represents the current connection with an arduino
 '''
-class ArduinoConnection:
+class ArduinoConnection(metaclass=Singleton):
+
+    #maps coord in the phoneme pattern jsons to the id of the motor from specific arduino
+    self.mapping : Dict[int, int]
+
     '''
     establish connection with arduino
 
@@ -18,7 +25,6 @@ class ArduinoConnection:
 
         #set found device
         self.device = serial.Serial(self.find_arduino_port(), baudrate=self.baudrate)
-        time.sleep(5)
 
     '''
     parse the config json file 
@@ -60,7 +66,7 @@ class ArduinoConnection:
     '''
     generic query
     '''
-    def query(self, message : str):
+    def query(self, message : str) -> str:
         # Send message to Arduino.
         self.device.write(message.encode('ascii'))
 

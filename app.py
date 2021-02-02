@@ -3,6 +3,7 @@ from flask_cors import CORS
 
 from src.handlers.Dispatcher import Dispatcher
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
+from src.models.request_data.SendPhonemeRequest import SendPhonemeRequest
 from src.models.CMUPhonemes import CMUPhonemes
 
 import os
@@ -52,10 +53,18 @@ def phonemes():
 @app.route(BASE_URL + '/microcontroller/phonemes', methods=['POST'])
 @validate_json
 def send_phonemes():
+        #get body from api
         data = request.json
 
         for phoneme in data['phonemes']: #issue events to micrcontroller
-            print("TODO: add SendPhonemeEvent {} to the Dispatcher".format(phoneme))
+            #load the json of the phoneme
+            json_fp = os.getcwd() + '\\resources\\phoneme_patterns\\' + phoneme + ".json"
+            with open(json_fp, 'r') as f:
+                json_pattern = json.load(f)
+            #make the event request data
+            phoneme_request = SendPhonemeRequest(phoneme, json_pattern)
+            #send to dispatcher
+            Dispatcher.handle(phoneme_request)
 
         return "", 200
 

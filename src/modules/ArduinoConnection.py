@@ -1,54 +1,68 @@
 from src.helpers.Logger import Logger
-from src.helpers.SingletonHelper import Singleton
+from src.helpers.SingletonHelper import SingletonArduino
 
 from typing import Dict, Any, List
 
 import serial
 import serial.tools.list_ports
 
+import os
+import json
+
 '''
 represents the current connection with an arduino
 '''
-class ArduinoConnection(metaclass=Singleton):
+class ArduinoConnection(metaclass=SingletonArduino):
+
+    #configured
+    configured : bool = False
 
     #maps coord in the phoneme pattern jsons to the id of the motor from specific arduino
-    self.mapping : Dict[int, int]
+    mapping : Dict[int, int]
 
     #whether backend in debug (so no connected arduino)
-    self.debug : bool
+    debug : bool
 
     #baudrate for connected arduino
-    self.baudrate : int
+    baudrate : int
 
     #list of serials of known arduinos (should include current connected arduino)
-    self.serials : List[str]
+    serials : List[str]
 
     '''
     establish connection with arduino
 
     param config_file: JSON dictionary with arduino specific settings
     '''
-    def __init__(self, config_json : Dict[str, Any]):
-        #parse config settings for arduino
-        self.parse_config_JSON(config_file) 
+    def __init__(self):
+        pass
+        
+    def connect_with_config(self, fp_json : str):
+        with open(fp_json, 'r') as f:
+                json_config = json.load(f)
+
+        self.parse_config_JSON(json_config) 
 
         #set found device
         if not self.debug:
             self.device = serial.Serial(self.find_arduino_port(), baudrate=self.baudrate)
+        
+        print("reached this")
+        self.configured = True
 
     '''
     parse the config json file 
 
     param config_file: JSON dictionary with arduino specific settings
     '''
-    def parse_config_JSON(self, config_file):
+    def parse_config_JSON(self, config):
         #get mapping of motor coord to id
         self.mapping = {}
         for pair in config['mapping']:
             self.mapping[pair['coord']] = pair['coord']
 
         # serials of known arduinos
-        self.serials = config['serials']
+        self.serials = config['serial_numbers']
         #baudrate that is used in arduino
         self.baudrate = config['baudrate']
         #debug mode or not
@@ -69,17 +83,27 @@ class ArduinoConnection(metaclass=Singleton):
     send pattern for a phoneme to arduino
     '''
     def send_pattern(self, pattern_JSON: Dict[str, Any]):
+        #check if configured
+        if not self.configured:
+            raise Exception("Illegal state, attempt to send pattern to arduino without it being configured")
+
+        #map from coords to ids
         for i in range(len(pattern_JSON['pattern'])):
-            for j in range(len(command['pins'])):
+            for j in range(len(pattern_JSON['pattern'][i]['pins'])):
                 # translate coordinate of pin to ids of pins of arduino
                 pattern_JSON['pattern'][i]['pins'][j]['pin'] = self.mapping[pattern_JSON['pattern'][i]['pins'][j]['pin']] 
         
+        #send to arduino
         self.query(json.dumps(pattern_JSON, indent=4, sort_keys=True))
 
     '''
     generic query
     '''
     def query(self, message : str) -> str:
+        #check if configured
+        if not self.configured:
+            raise Exception("Illegal state, attempt to send pattern to arduino without it being configured")
+
         # Send message to Arduino.
         if not self.debug:
             self.device.write(message.encode('ascii'))
@@ -90,3 +114,4 @@ class ArduinoConnection(metaclass=Singleton):
             Logger.log_info("ArduinoConnection.query: A would have now arrived at the arduino")
             line = ""
         return line
+    

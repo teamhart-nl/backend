@@ -5,6 +5,8 @@ from src.handlers.Dispatcher import Dispatcher
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
 from src.models.request_data.SendPhonemeRequest import SendPhonemeRequest
 from src.models.CMUPhonemes import CMUPhonemes
+from src.modules.ArduinoConnection import ArduinoConnection
+
 
 import os
 import json
@@ -14,6 +16,9 @@ app = Flask(__name__)
 CORS(app)
 
 dispatcher = Dispatcher()
+
+#config singleton arduinoconnection
+ArduinoConnection().connect_with_config(os.getcwd() + '\\resources\\arduino_config.json')
 
 BASE_URL = '/api/v1'
 
@@ -55,16 +60,17 @@ def phonemes():
 def send_phonemes():
         #get body from api
         data = request.json
-
+        
         for phoneme in data['phonemes']: #issue events to micrcontroller
             #load the json of the phoneme
-            json_fp = os.getcwd() + '\\resources\\phoneme_patterns\\' + phoneme + ".json"
+            json_fp = os.getcwd() + '\\resources\\phoneme_patterns\\' + phoneme + '.json'
             with open(json_fp, 'r') as f:
                 json_pattern = json.load(f)
+
             #make the event request data
-            phoneme_request = SendPhonemeRequest(phoneme, json_pattern)
+            send_phoneme_request = SendPhonemeRequest(phoneme, json_pattern)
             #send to dispatcher
-            Dispatcher.handle(phoneme_request)
+            dispatcher.handle(send_phoneme_request)
 
         return "", 200
 

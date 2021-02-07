@@ -5,6 +5,7 @@ from src.handlers.Dispatcher import Dispatcher
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
 from src.models.request_data.SendPhonemeRequest import SendPhonemeRequest
 from src.models.CMUPhonemes import CMUPhonemes
+from src.helpers.Logger import Logger
 from src.modules.ArduinoConnection import ArduinoConnection
 
 
@@ -51,7 +52,7 @@ def phonemes():
         if phoneme in CMUPhonemes: #CMUPhonemes are the phonemes supported in nltk.cmudict()
             available.append(phoneme)
         else:
-            print(phoneme + ' is not a valid phoneme name')
+            Logger.log_info("The resource " + phoneme + '.json is not a valid phoneme name')
 
     return jsonify({'phonemes' : available}), 200
 

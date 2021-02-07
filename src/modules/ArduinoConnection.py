@@ -1,5 +1,5 @@
 from src.helpers.Logger import Logger
-from src.helpers.SingletonHelper import SingletonArduino
+from src.helpers.SingletonHelper import Singleton
 
 from typing import Dict, Any, List
 
@@ -12,7 +12,7 @@ import json
 '''
 represents the current connection with an arduino
 '''
-class ArduinoConnection(metaclass=SingletonArduino):
+class ArduinoConnection(metaclass=Singleton):
 
     #configured
     configured : bool = False
@@ -46,8 +46,11 @@ class ArduinoConnection(metaclass=SingletonArduino):
         #set found device
         if not self.debug:
             self.device = serial.Serial(self.find_arduino_port(), baudrate=self.baudrate)
-        
-        print("reached this")
+            Logger.log_info("connecting to Arduino...")
+            time.sleep(5)
+            # TODO make robust
+            Logger.log_info("Connected to Arduino")
+    
         self.configured = True
 
     '''
@@ -111,7 +114,7 @@ class ArduinoConnection(metaclass=SingletonArduino):
             # Make sure the Arduino always gives an output, otherwise Python will wait forever.
             line = self.device.readline().decode('ascii').strip()
         else:
-            Logger.log_info("ArduinoConnection.query: A would have now arrived at the arduino")
+            Logger.log_info("ArduinoConnection.query: A query would have now arrived at the arduino")
             line = ""
         return line
     

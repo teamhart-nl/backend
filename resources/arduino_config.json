@@ -1,0 +1,130 @@
+{
+    "description" : "config settings for the arduino",
+    "mode" : "debug",
+    "baudrate" : 115200,
+    "serial_numbers" : [
+        "A9LTHTFV", 
+        "55838333932351C0C191"
+        ],
+    "mapping" : [
+        { 
+            "coord" : 11,
+            "id" : 69
+        }, 
+
+        { 
+            "coord" : 12,
+            "id" : 69
+        }, 
+
+        { 
+            "coord" : 13,
+            "id" : 69
+        }, 
+
+        { 
+            "coord" : 14,
+            "id" : 69
+        }, 
+
+        { 
+            "coord" : 15,
+            "id" : 69
+        }, 
+
+        { 
+            "coord" : 16,
+            "id" : 69
+        }, 
+
+        { 
+            "coord" : 21,
+            "id" : 69
+        }, 
+
+        { 
+            "coord" : 22,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 23,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 24,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 25,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 26,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 31,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 32,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 33,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 34,
+            "id" : 69
+        },
+
+        { 
+            "coord" : 35,
+            "id" : 69
+        },
+
+        { 
+            "coord" : 36,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 41,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 42,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 43,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 44,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 45,
+            "id" : 69
+        },
+        
+        { 
+            "coord" : 46,
+            "id" : 69
+        }
+    ]
+}

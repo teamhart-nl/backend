@@ -18,21 +18,23 @@ CORS(app)
 
 dispatcher = Dispatcher()
 
-#config singleton arduinoconnection
+# config singleton ArduinoConnection
 ArduinoConnection().connect_with_config(os.getcwd() + '\\resources\\arduino_config.json')
 
 BASE_URL = '/api/v1'
 
-#Wrapper for json posts
+# wrapper for json posts
 def validate_json(f):
     @wraps(f)
     def wrapper(*args, **kw):
         try:
             data = request.json
-        except Exception: #problem reading in json
+        except Exception: 
+            # problem reading in json
             msg = "payload must be a valid json"
             return jsonify({"error": msg}), 400
-        if data is None:  #empty while json is expected
+        if data is None:  
+            # empty while json is expected
             msg = "payload must be a valid json"
             return jsonify({"error": msg}), 400
         else:    
@@ -42,37 +44,44 @@ def validate_json(f):
 ## API routes
 @app.route(BASE_URL + '/phonemes')
 def phonemes():
-    available = [] #list of available phonemes
-    fp = os.getcwd() + '\\resources\\phoneme_patterns' #resource folder for patterns of phonemes
+    # list of available phonemes
+    available = [] 
 
-    #loop through all 
+    # resource folder for patterns of phonemes
+    fp = os.getcwd() + '\\resources\\phoneme_patterns' 
+
+    # loop through all 
     for file in os.listdir(fp):
         phoneme = file.replace(".json", "")
         
-        if phoneme in CMUPhonemes: #CMUPhonemes are the phonemes supported in nltk.cmudict()
+        # CMUPhonemes are the phonemes supported in nltk.cmudict()
+        if phoneme in CMUPhonemes: 
             available.append(phoneme)
         else:
             Logger.log_info("The resource " + phoneme + '.json is not a valid phoneme name')
 
+    # return json data and succes code
     return jsonify({'phonemes' : available}), 200
 
 @app.route(BASE_URL + '/microcontroller/phonemes', methods=['POST'])
 @validate_json
 def send_phonemes():
-        #get body from api
+        # get body from api
         data = request.json
-        
-        for phoneme in data['phonemes']: #issue events to micrcontroller
-            #load the json of the phoneme
+
+        # issue events to micrcontroller
+        for phoneme in data['phonemes']: 
+            # load the json for the phoneme
             json_fp = os.getcwd() + '\\resources\\phoneme_patterns\\' + phoneme + '.json'
             with open(json_fp, 'r') as f:
                 json_pattern = json.load(f)
 
-            #make the event request data
+            # make the event request data
             send_phoneme_request = SendPhonemeRequest(phoneme, json_pattern)
-            #send to dispatcher
+            # send to dispatcher
             dispatcher.handle(send_phoneme_request)
 
+        # empty body return, succes code
         return "", 200
 
 ##For testing

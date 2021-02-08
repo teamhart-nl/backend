@@ -7,10 +7,7 @@ class SendPhonemeRequest(AbstractRequest):
     """
     Request type for sending a phoneme to the microcontroller
     """
-
-    #arduino config fp
-    fp : str
-
+    
     # which phoneme
     phoneme : str
 

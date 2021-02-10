@@ -68,7 +68,7 @@ class ArduinoConnection(metaclass=Singleton):
         # get mapping of motor coord to id
         self.mapping = {}
         for pair in config['mapping']:
-            self.mapping[pair['coord']] = pair['coord']
+            self.mapping[pair['coord']] = pair['id']
 
         # serials of known arduinos
         self.serials = config['serial_numbers']

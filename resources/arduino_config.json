@@ -1,6 +1,6 @@
 {
     "description" : "config settings for the arduino",
-    "mode" : "debug",
+    "mode" : "deug",
     "baudrate" : 115200,
     "serial_numbers" : [
         "A9LTHTFV", 
@@ -9,7 +9,7 @@
     "mapping" : [
         { 
             "coord" : 11,
-            "id" : 69
+            "id" : 11
         }, 
 
         { 
@@ -39,7 +39,7 @@
 
         { 
             "coord" : 21,
-            "id" : 69
+            "id" : 21
         }, 
 
         { 
@@ -69,7 +69,7 @@
         
         { 
             "coord" : 31,
-            "id" : 69
+            "id" : 31
         },
         
         { 
@@ -99,7 +99,7 @@
         
         { 
             "coord" : 41,
-            "id" : 69
+            "id" : 41
         },
         
         { 

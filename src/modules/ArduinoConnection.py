@@ -130,6 +130,7 @@ class ArduinoConnection(metaclass=Singleton):
         # Send message to Arduino.
         if not self.debug:
             try:
+                print(message)
                 self.device.write(message.encode('ascii'))
 
                 # Make sure the Arduino always gives an output, otherwise Python will wait forever.

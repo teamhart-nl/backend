@@ -41,7 +41,7 @@ class SendMultiplePhonemesArduinoEvent(AbstractEvent):
 
             # if a valid deconstruction is found, send it to the arduino
             if valid_deconstruction:
-                Logger.log_info("Sending word consisting of phonemes {}".format(word[i]))
+                Logger.log_info("SendMultiplePhonemeArduinoEvent.handle: Sending word consisting of phonemes {}".format(word[i]))
                 # send phonemes to the arduino
 
                 for phoneme in word[i]:

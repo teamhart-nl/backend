@@ -33,13 +33,13 @@ class ArduinoConnection(metaclass=Singleton):
     def __init__(self):
         pass
 
-    '''
-    Establish connection with arduino
-
-    param fp_json: filepath to JSON with arduino specific settings
-    '''
-
     def connect_with_config(self, fp_json: str):
+        """
+        Establish connection with arduino
+
+        param fp_json: filepath to JSON with arduino specific settings
+        """
+
         # load json file
         with open(fp_json, 'r') as f:
             json_config = json.load(f)
@@ -58,13 +58,13 @@ class ArduinoConnection(metaclass=Singleton):
 
         self.configured = True
 
-    '''
-    parse the config json file 
-
-    param config_file: JSON dictionary with arduino specific settings
-    '''
-
     def parse_config_JSON(self, config):
+        """
+        parse the config json file
+
+        param config_file: JSON dictionary with arduino specific settings
+        """
+
         # get mapping of motor coord to id
         self.mapping = {}
         for pair in config['mapping']:
@@ -91,16 +91,18 @@ class ArduinoConnection(metaclass=Singleton):
             if port_info.serial_number in self.serials:
                 return port_info.device
         else:
-            raise IOError('Could not find a known Arduino, is it plugged in and set as known serial number?')
-
-    '''
-    Send a phoneme pattern to arduino
-    '''
+            raise IOError('ArduinoConnection.find_arduino_port: Could not find a known Arduino, '
+                          'is it plugged in and set as known serial number?')
 
     def send_pattern(self, pattern_JSON: Dict[str, Any]):
+        """
+        Send a phoneme pattern to arduino
+        """
+
         # check if connection is configured
         if not self.configured:
-            raise Exception("Illegal state, attempt to send pattern to arduino without it being configured")
+            raise Exception("ArduinoConnection.send_pattern: Illegal state, "
+                            "attempt to send pattern to arduino without it being configured")
 
         # map from coords to ids
         for i in range(len(pattern_JSON['pattern'])):
@@ -112,14 +114,15 @@ class ArduinoConnection(metaclass=Singleton):
                 # send to arduino
         self.query(json.dumps(pattern_JSON, indent=4, sort_keys=True))
 
-    '''
-    Generic string query to the arduino
-    '''
-
     def query(self, message: str) -> str:
+        """
+        Generic string query to the arduino
+        """
+
         # check if configured
         if not self.configured:
-            raise Exception("Illegal state, attempt to send pattern to arduino without it being configured")
+            raise Exception("ArduinoConnection.query: Illegal state, "
+                            "attempt to send pattern to arduino without it being configured")
 
         # Send message to Arduino.
         if not self.debug:

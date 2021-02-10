@@ -46,7 +46,7 @@ class GoogleTranslateEvent(AbstractEvent):
         request_data.translated_sentences = map(translate_sentence, decoded_sentences)
 
         # Log information
-        Logger.log_info("Completed GoogleTranslateEvent with translated sentences:")
+        Logger.log_info("GoogleTranslateEvent.handle: Completed GoogleTranslateEvent with translated sentences:")
         Logger.log_info(request_data.translated_sentences)
 
         # Return request_data

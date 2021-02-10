@@ -24,8 +24,9 @@ class GoogleApiWrapper(metaclass=Singleton):
 
     def checkGoogleApiConnection(self):
         # Logging general information
-        Logger.log_info("Checking connection to Google API")
-        Logger.log_info("Currently, the path to your credentials file is set to: " +
+        Logger.log_info("GoogleApiWrapper.checkGoogleApiConnection: Checking connection to Google API")
+        Logger.log_info("GoogleApiWrapper.checkGoogleApiConnection: Currently, "
+                        "the path to your credentials file is set to: " +
                         os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'))
 
         try:
@@ -40,11 +41,14 @@ class GoogleApiWrapper(metaclass=Singleton):
             self.authenticated = True
 
             # Logging info that connection has succeeded
-            Logger.log_info("Google API credentials accepted, connection succeeded!")
+            Logger.log_info("GoogleApiWrapper.checkGoogleApiConnection: "
+                            "Google API credentials accepted, connection succeeded!")
         except DefaultCredentialsError:
             # Logging information that connection has failed
-            Logger.log_warning("Could not connect to Google API")
-            Logger.log_warning("Make sure to set you google credentials correctly!")
+            Logger.log_warning("GoogleApiWrapper.checkGoogleApiConnection: "
+                               "Could not connect to Google API")
+            Logger.log_warning("GoogleApiWrapper.checkGoogleApiConnection: "
+                               "Make sure to set you google credentials correctly!")
 
     def setCredentials(self, credential_path):
         # set environment variable.

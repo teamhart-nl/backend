@@ -48,7 +48,7 @@ class ArpabetPhonemeEvent(AbstractEvent):
             request_data.phonemes.append(sentence_in_phonemes)
 
         # Log completion information
-        Logger.log_info("Completed ArpabetPhonemeEvent with phonemes:")
+        Logger.log_info("ArpabetPhonemeEvent.handle: Completed ArpabetPhonemeEvent with phonemes:")
         Logger.log_info(request_data.phonemes)
 
         # Return request data

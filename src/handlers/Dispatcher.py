@@ -52,7 +52,7 @@ class Dispatcher(metaclass=Singleton):
         """
 
         # Log arrival of data
-        Logger.log_info("Received dispatcher data of type " + data.get_event_type().name)
+        Logger.log_info("Dispatcher.handle: Received dispatcher data of type " + data.get_event_type().name)
 
         # Loop over all events that need to be triggered for the EventType of the data
         for event in self.event_type_map[data.get_event_type().name]:

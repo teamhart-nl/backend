@@ -79,11 +79,11 @@ class ArduinoConnection(metaclass=Singleton):
         # debug mode or not
         self.debug = (config['mode'] == 'debug')
 
-    '''
-    finds the first port with an arduino connected with known serial number
-    '''
-
     def find_arduino_port(self) -> Any:
+        """
+        finds the first port with an arduino connected with known serial number
+        """
+
         # run through ports to find matching serial-number
         for port_info in serial.tools.list_ports.comports():
 

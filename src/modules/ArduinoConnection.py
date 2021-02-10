@@ -111,7 +111,7 @@ class ArduinoConnection(metaclass=Singleton):
                 pattern_JSON['pattern'][i]['pins'][j]['pin'] = self.mapping[
                     pattern_JSON['pattern'][i]['pins'][j]['pin']]
 
-                # send to arduino
+        # send to arduino
         self.query(json.dumps(pattern_JSON, indent=4, sort_keys=True))
 
     def query(self, message: str) -> str:

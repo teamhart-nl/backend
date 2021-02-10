@@ -8,7 +8,7 @@ import serial.tools.list_ports
 
 import time
 import json
-
+import copy
 
 class ArduinoConnection(metaclass=Singleton):
     """
@@ -104,15 +104,18 @@ class ArduinoConnection(metaclass=Singleton):
             raise Exception("ArduinoConnection.send_pattern: Illegal state, "
                             "attempt to send pattern to arduino without it being configured")
 
+        # deep copy json as to prevent overwriting mapping
+        mapped_pattern_JSON = copy.deepcopy(pattern_JSON)
+
         # map from coords to ids
-        for i in range(len(pattern_JSON['pattern'])):
-            for j in range(len(pattern_JSON['pattern'][i]['pins'])):
+        for i in range(len(mapped_pattern_JSON['pattern'])):
+            for j in range(len(mapped_pattern_JSON['pattern'][i]['pins'])):
                 # translate coordinate of pin (in pattern json) to ids of pins of arduino (in config json)
-                pattern_JSON['pattern'][i]['pins'][j]['pin'] = self.mapping[
-                    pattern_JSON['pattern'][i]['pins'][j]['pin']]
+                mapped_pattern_JSON['pattern'][i]['pins'][j]['pin'] = self.mapping[
+                    mapped_pattern_JSON['pattern'][i]['pins'][j]['pin']]
 
         # send to arduino
-        self.query(json.dumps(pattern_JSON, indent=4, sort_keys=True))
+        self.query(json.dumps(mapped_pattern_JSON, indent=4, sort_keys=True))
 
     def query(self, message: str) -> str:
         """
@@ -130,7 +133,9 @@ class ArduinoConnection(metaclass=Singleton):
                 self.device.write(message.encode('ascii'))
 
                 # Make sure the Arduino always gives an output, otherwise Python will wait forever.
-                line = self.device.readline().decode('ascii').strip()
+                # line = self.device.readline().strip().decode('ascii')
+                # TODO make sure we can get Arduino status
+                line = ""
             except Exception as e:
                 Logger.log_warning("ArduinoConnection.query: error occurred during sending. Complete error: " + e)
 

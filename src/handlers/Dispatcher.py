@@ -63,6 +63,6 @@ class Dispatcher(metaclass=Singleton):
                 # Catch and report exception
                 Logger.log_warning("FATAL ERROR! Stopping event excecution")
                 Logger.log_warning("Dispatcher.handle: Stopped event was of type " + event.__class__.__name__)
-                print(e)
+                Logger.log_warning("Complete error: " + e)
                 return
 

@@ -4,6 +4,7 @@ from flask_cors import CORS
 from src.handlers.Dispatcher import Dispatcher
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
 from src.models.request_data.SendPhonemeRequest import SendPhonemeRequest
+from src.models.request_data.SendSentenceRequest import SendSentenceRequest
 from src.models.CMUPhonemes import CMUPhonemes
 from src.helpers.Logger import Logger
 from src.modules.ArduinoConnection import ArduinoConnection
@@ -15,13 +16,37 @@ from functools import wraps
 
 app = Flask(__name__)
 CORS(app)
+BASE_URL = '/api/v1'
+RESOURCES = os.getcwd() + '\\resources\\'
 
+# =============================================================================
+#  Runtime configuration
+
+# init event dispatcher
 dispatcher = Dispatcher()
 
 # config singleton ArduinoConnection
-ArduinoConnection().connect_with_config(os.getcwd() + '\\resources\\arduino_config.json')
+ArduinoConnection().connect_with_config(RESOURCES + 'arduino_config.json')
 
-BASE_URL = '/api/v1'
+# load the phoneme patterns 
+phoneme_patterns = {}
+
+# loop through available phoneme patterns
+for pattern_file in os.listdir(RESOURCES + '\\phoneme_patterns\\'):
+    #get phoneme name
+    phoneme = pattern_file.replace('.json', '')
+
+    # CMUPhonemes are the phonemes supported in nltk.cmudict()
+    if not (phoneme in CMUPhonemes): 
+        raise NameError('The resource ' + phoneme + '.json is not a valid phoneme name')
+
+    # load all patterns. This means if change of patterns, restart
+    with open(RESOURCES + '\\phoneme_patterns\\' + pattern_file, 'r') as f:
+        json_pattern = json.load(f)
+    phoneme_patterns[phoneme] = json_pattern
+
+# =============================================================================
+#  API ENDPOINT       
 
 # wrapper for json posts
 def validate_json(f):
@@ -41,55 +66,63 @@ def validate_json(f):
             return f(*args, **kw)
     return wrapper
 
-## API routes
+"""
+GET list of available phonemes
+"""
 @app.route(BASE_URL + '/phonemes')
 def phonemes():
-    # list of available phonemes
-    available = [] 
-
-    # resource folder for patterns of phonemes
-    fp = os.getcwd() + '\\resources\\phoneme_patterns' 
-
-    # loop through all 
-    for file in os.listdir(fp):
-        phoneme = file.replace(".json", "")
-        
-        # CMUPhonemes are the phonemes supported in nltk.cmudict()
-        if phoneme in CMUPhonemes: 
-            available.append(phoneme)
-        else:
-            Logger.log_info("The resource " + phoneme + '.json is not a valid phoneme name')
+    # all keys are available phonemes
+    available = list(phoneme_patterns.keys())
 
     # return json data and succes code
     return jsonify({'phonemes' : available}), 200
 
+
+"""
+POST sending phoneme(s) to the microcontroller
+"""
 @app.route(BASE_URL + '/microcontroller/phonemes', methods=['POST'])
 @validate_json
 def send_phonemes():
-        # get body from api
-        data = request.json
+    # get body from api
+    data = request.json
 
-        # issue events to micrcontroller
-        for phoneme in data['phonemes']: 
-            # load the json for the phoneme
-            json_fp = os.getcwd() + '\\resources\\phoneme_patterns\\' + phoneme + '.json'
-            with open(json_fp, 'r') as f:
-                json_pattern = json.load(f)
+    # issue events to micrcontroller
+    for phoneme in data['phonemes']: 
+        # get the json pattern for the phoneme
+        json_pattern = phoneme_patterns[phoneme]
 
-            # make the event request data
-            send_phoneme_request = SendPhonemeRequest(phoneme, json_pattern)
-            # send to dispatcher
-            dispatcher.handle(send_phoneme_request)
+        # make the event request data
+        send_phoneme_request = SendPhonemeRequest(phoneme, json_pattern)
+        # send to dispatcher
+        dispatcher.handle(send_phoneme_request)
 
-        # empty body return, succes code
-        return "", 200
+    # empty body return, succes code
+    return "", 200
+
+"""
+POST send word(s) to the microcontroller
+"""
+@app.route(BASE_URL + '/microcontroller/words', methods=['POST'])
+@validate_json
+def send_words():
+    # get body from api
+    data = request.json
+
+    # issue events to micrcontroller
+    sentence_request = SendSentenceRequest(data['words'], phoneme_patterns)
+    dispatcher.handle(sentence_request)
+
+    # create result json with alle sent phonemes
+    result = {}
+    result["words"] = []
+    for decomposition in sentence_request.result:
+        result["words"].append({ "phonemes" : decomposition})
+
+    # send return, succes code
+    return jsonify(result), 200
 
 ##For testing
-@app.route('/vue-test')
-def vue_test():
-    return {"greeting": "From Flask, With Love"}
-
-
 @app.route(BASE_URL + '/print/', methods=['POST'])
 def test():
     if request.method == 'POST':

@@ -4,7 +4,13 @@ Install requirements with `pip install -r /path/to/requirements.txt`
 
 Flask can be run simply with `flask run`
 
-If you want to generate a distribution executable (for perception cluster), this can (after everything is installed) be done with `pyinstaller -F --add-data "templates;templates" --add-data "static;static" app.py` (not elaborately tested yet).
+# Creating distribution
+1. build the frontend with `npm run build`
+2. Put the `index.html` just generated in the `templates` folder in the backend.
+3. Put the rest of the generated frontend files in the `static` folder in the backend.
+4. Change the links in the `index.html` referring to js/img/css files by adding the prefix `static/`
+5. Change the `production` boolean in the `app.py` file to `True`.
+6. Generate the distribution using the command `pyinstaller --add-data "resources;resources" --add-data "templates;templates" --add-data "static;static" app.py`
 
 ## API Specification
 

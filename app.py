@@ -18,7 +18,7 @@ app = Flask(__name__)
 CORS(app)
 BASE_URL = '/api/v1'
 RESOURCES = os.getcwd() + '\\resources\\'
-production = False
+production = True
 
 # =============================================================================
 #  Runtime configuration
@@ -70,9 +70,12 @@ def validate_json(f):
 
 if production:
     @app.route('/')
+    def standard_route():
+        return render_template("index.html")
+
     @app.errorhandler(404)
     @app.errorhandler(500)
-    def base(e):
+    def error_route(e):
         return render_template("index.html")
 
 """

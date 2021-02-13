@@ -18,7 +18,7 @@ app = Flask(__name__)
 CORS(app)
 BASE_URL = '/api/v1'
 RESOURCES = os.getcwd() + '\\resources\\'
-production = True
+production = False
 
 # =============================================================================
 #  Runtime configuration

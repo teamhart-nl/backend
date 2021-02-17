@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 
 from src.handlers.Dispatcher import Dispatcher
@@ -18,6 +18,7 @@ app = Flask(__name__)
 CORS(app)
 BASE_URL = '/api/v1'
 RESOURCES = os.getcwd() + '\\resources\\'
+production = False
 
 # =============================================================================
 #  Runtime configuration
@@ -65,6 +66,17 @@ def validate_json(f):
         else:    
             return f(*args, **kw)
     return wrapper
+
+
+if production:
+    @app.route('/')
+    def standard_route():
+        return render_template("index.html")
+
+    @app.errorhandler(404)
+    @app.errorhandler(500)
+    def error_route(e):
+        return render_template("index.html")
 
 """
 GET list of available phonemes

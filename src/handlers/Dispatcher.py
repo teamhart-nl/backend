@@ -52,7 +52,7 @@ class Dispatcher(metaclass=Singleton):
         """
 
         # Log arrival of data
-        Logger.log_info("Received dispatcher data of type " + data.get_event_type().name)
+        Logger.log_info("Dispatcher.handle: Received dispatcher data of type " + data.get_event_type().name)
 
         # Loop over all events that need to be triggered for the EventType of the data
         for event in self.event_type_map[data.get_event_type().name]:
@@ -62,7 +62,7 @@ class Dispatcher(metaclass=Singleton):
             except Exception as e:
                 # Catch and report exception
                 Logger.log_warning("FATAL ERROR! Stopping event excecution")
-                Logger.log_warning("Stopped event was of type " + str(type(event)))
-                print(e)
+                Logger.log_warning("Dispatcher.handle: Stopped event was of type " + event.__class__.__name__)
+                Logger.log_warning("Complete error: " + str(e))
                 return
 

@@ -15,9 +15,9 @@ class SendPhonemeArduinoEvent(AbstractEvent):
 
     def handle(self, request_data : AbstractRequest):
         # send the pattern to the arduino
-        Logger.log_info("Sending the pattern for {} to the arduino.".format(request_data.phoneme))
+        Logger.log_info("SendPhonemeArduinoEvent.handle: Sending the pattern for {} to the arduino.".format(request_data.phoneme))
         ArduinoConnection().send_pattern(request_data.phoneme_pattern)
-        Logger.log_info("Sending of pattern for {} completed.".format(request_data.phoneme))
+        Logger.log_info("SendPhonemeArduinoEvent.handle: Sending of pattern for {} completed.".format(request_data.phoneme))
 
         return request_data
 

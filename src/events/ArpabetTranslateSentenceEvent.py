@@ -51,7 +51,7 @@ class ArpabetTranslateSentenceEvent(AbstractEvent):
                                     + "' was not found in Arpabet dictionary.")
 
         # Log completion information
-        Logger.log_info("Completed ArpabetTranslateSentenceEvent with phonemes:")
+        Logger.log_info("ArpabetTranslateSentenceEvent.handle: Completed ArpabetTranslateSentenceEvent with phonemes:")
         Logger.log_info(request_data.phonemes)
 
         # Return request data

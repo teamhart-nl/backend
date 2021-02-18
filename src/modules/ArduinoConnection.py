@@ -10,6 +10,7 @@ import time
 import json
 import copy
 
+
 class ArduinoConnection(metaclass=Singleton):
     """
     Represents the connection with an Arduino

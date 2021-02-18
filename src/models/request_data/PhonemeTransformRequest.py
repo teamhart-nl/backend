@@ -6,15 +6,17 @@ from typing import List, Dict, Any, Union
 
 def split_sentences(sentences: List[str]) -> List[List[str]]:
     """
-    Helper function to split sentences
+    Helper function to split sentences.
+    @param sentences    List of sentences in form ["sentence one", "sentence two"]
+    @returns            List of sentences where every sentence is divided into a list of words.
     """
 
     # the split sentences
     split_sen = []
 
     # loop through sentences
-    for sen in sentences:
-        split_sen.append(sen.split())
+    for sentence in sentences:
+        split_sen.append(sentence.split())
 
     return split_sen
 
@@ -83,6 +85,8 @@ class PhonemeTransformRequest(AbstractRequest):
             if sentences is None:
                 sentences = []
 
+            elif len(sentences) == 0:
+                pass
             # if list of strings, split strings
             elif isinstance(sentences[0], str):
                 sentences = split_sentences(sentences)

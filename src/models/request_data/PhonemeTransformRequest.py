@@ -24,7 +24,7 @@ class PhonemeTransformRequest(AbstractRequest):
     Request type for a transformation that includes a phonemes transformation.
     """
 
-    # List of sentences
+    # List of sentences in which each sentence is divided into a list of words
     sentences: List[List[str]]
 
     # Mapping of phoneme to the JSON pattern
@@ -52,10 +52,16 @@ class PhonemeTransformRequest(AbstractRequest):
         Function throws an error when both the sentences and phonemes parameter are filled.
 
         @param phoneme_patterns     Dict[str, Dict[str, Any]] json patterns of phonemes
-        @param sentences            Text to process, either list of strings, or list of list of strings
+        @param sentences            Text to process, either (1) list of strings, or (2) list of list of strings in the
+                                        following form
+                                            (1) ["first sentence", "second sentence"0
+                                            (2) [["first", "sentence"], ["second", "sentence"]]
         @param phonemes             Phonemes to be send to the arduino
-        @raises ValueError          If both sentences and phonemes are filled with data
+        @raises ValueError          If both sentences and phonemes are filled with data or when phoneme_patterns is None
         """
+        if phoneme_patterns is None:
+            raise ValueError("PhonemeTransformRequest.__init__: phoneme_patterns cannot be None")
+
         if sentences is not None and phonemes is not None:
             raise ValueError("PhonemeTransformRequest.__init__: both sentences and phonemes parameter was passed")
 

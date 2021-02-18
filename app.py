@@ -3,10 +3,7 @@ from flask_cors import CORS
 
 from src.handlers.Dispatcher import Dispatcher
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
-from src.models.request_data.SendPhonemeRequest import SendPhonemeRequest
-from src.models.request_data.SendSentenceRequest import SendSentenceRequest
 from src.models.CMUPhonemes import CMUPhonemes
-from src.helpers.Logger import Logger
 from src.modules.ArduinoConnection import ArduinoConnection
 
 
@@ -34,7 +31,7 @@ phoneme_patterns = {}
 
 # loop through available phoneme patterns
 for pattern_file in os.listdir(RESOURCES + '\\phoneme_patterns\\'):
-    #get phoneme name
+    # get phoneme name
     phoneme = pattern_file.replace('.json', '')
 
     # CMUPhonemes are the phonemes supported in nltk.cmudict()
@@ -49,8 +46,12 @@ for pattern_file in os.listdir(RESOURCES + '\\phoneme_patterns\\'):
 # =============================================================================
 #  API ENDPOINT       
 
-# wrapper for json posts
+
 def validate_json(f):
+    """
+    wrapper for json posts
+    """
+
     @wraps(f)
     def wrapper(*args, **kw):
         try:
@@ -78,72 +79,61 @@ if production:
     def error_route(e):
         return render_template("index.html")
 
-"""
-GET list of available phonemes
-"""
+
 @app.route(BASE_URL + '/phonemes')
 def phonemes():
+    """
+    GET list of available phonemes
+    """
+
     # all keys are available phonemes
     available = list(phoneme_patterns.keys())
 
-    # return json data and succes code
-    return jsonify({'phonemes' : available}), 200
+    # return json data and success code
+    return jsonify({'phonemes': available}), 200
 
 
-"""
-POST sending phoneme(s) to the microcontroller
-"""
 @app.route(BASE_URL + '/microcontroller/phonemes', methods=['POST'])
 @validate_json
 def send_phonemes():
+    """
+    POST sending phoneme(s) to the microcontroller
+    """
+
     # get body from api
     data = request.json
 
-    # issue events to micrcontroller
-    for phoneme in data['phonemes']: 
-        # get the json pattern for the phoneme
-        json_pattern = phoneme_patterns[phoneme]
+    # make the event request data
+    request_data = PhonemeTransformRequest(phoneme_patterns, phonemes = data['phonemes'])
 
-        # make the event request data
-        send_phoneme_request = SendPhonemeRequest(phoneme, json_pattern)
-        # send to dispatcher
-        dispatcher.handle(send_phoneme_request)
+    # send to dispatcher
+    dispatcher.handle(request_data)
 
-    # empty body return, succes code
+    # empty body return, success code
     return "", 200
 
-"""
-POST send word(s) to the microcontroller
-"""
+
 @app.route(BASE_URL + '/microcontroller/words', methods=['POST'])
 @validate_json
 def send_words():
+    """
+    POST send word(s) to the microcontroller
+    """
+
     # get body from api
     data = request.json
 
-    # issue events to micrcontroller
-    sentence_request = SendSentenceRequest(data['words'], phoneme_patterns)
+    # issue event
+    sentence_request = PhonemeTransformRequest( phoneme_patterns, sentences= [data['words']] )
     dispatcher.handle(sentence_request)
 
-    # create result json with alle sent phonemes
-    result = {}
-    result["words"] = []
-    for decomposition in sentence_request.result:
-        result["words"].append({ "phonemes" : decomposition})
+    # create result json with all sent phonemes
+    result = {"words": data['words'], "decomposition" : []}
+    for decomposition in sentence_request.sent_phonemes:
+        result["decomposition"].append({"phonemes": decomposition})
 
-    # send return, succes code
+    # send return, success code
     return jsonify(result), 200
-
-##For testing
-@app.route(BASE_URL + '/print/', methods=['POST'])
-def test():
-    if request.method == 'POST':
-
-        phoneme_request = PhonemeTransformRequest()
-        phoneme_request.sentences = [request.form['text']]
-        dispatcher.handle(phoneme_request)
-
-        return '200'
 
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)

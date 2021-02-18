@@ -4,7 +4,7 @@ Install requirements with `pip install -r /path/to/requirements.txt`
 
 Flask can be run simply with `flask run`
 
-# Creating distribution
+## Creating distribution
 1. build the frontend with `npm run build`
 2. Put the `index.html` just generated in the `templates` folder in the backend.
 3. Put the rest of the generated frontend files in the `static` folder in the backend.
@@ -12,7 +12,7 @@ Flask can be run simply with `flask run`
 5. Change the `production` boolean in the `app.py` file to `True`.
 6. Generate the distribution using the command `pyinstaller --add-data "resources;resources" --add-data "templates;templates" --add-data "static;static" app.py`
 
-## API Specification
+# API Specification
 
 ### Phonemes
 <details>
@@ -77,7 +77,7 @@ BODY
 
 EXAMPLE CURL (windows)
 
-    curl -H "Content-Type: application/json" -d "{ \"phonemes\": [\"K\", \"L\"] }" http://localhost:5000/api/v1/microcontroller/phonemes
+    curl -H "Content-Type: application/json" -d "{ \"phonemes\": [\"K\", \"M\"] }" http://localhost:5000/api/v1/microcontroller/phonemes
 
 RESULT:
 
@@ -104,7 +104,9 @@ EXAMPLE CURL (windows)
 
 RESULT:
 
-    {"words" : [
+    {
+        "words" : ["Team", "HART"],
+        "decomposition" : [
         {
             "phonemes" : ["T", "IY", "M"]
         },
@@ -116,6 +118,66 @@ RESULT:
     200 if OK
 
 </details>
+
+# Events
+
+## Overview of Events
+<details>
+<summary>GoogleTranscribeFileEvent</summary>
+Transforms a local audio file into text written in given source language.
+
+- Expects: 
+    - _path_ which is a string filepath to the audio file
+    - *audio_type* type of audio file
+    - *spoken_language* 
+- Modifies:
+- Creates: _sentences_ result of the transcription: consecutive audio portions transcribed into sentences
+    - currently in [SpeechRecognitionResult format](https://cloud.google.com/speech-to-text/docs/reference/rest/v1/speech/recognize#speechrecognitionresult): 
+
+</details>
+
+<details>
+<summary>GoogleTranslateEvent</summary>
+
+- Expects: 
+    - *original_sentences*: list of lists with original strings
+    - *source_language*
+    - *target_language*
+- Modifies:
+- Creates: *translated_sentences* , list of [raw response bodies of the translate api](https://cloud.google.com/translate/docs/reference/rest/v2/translate#response-body)
+
+</details>
+
+<details>
+<summary>PhonemeDecompositionEvent</summary>
+Transforms an English sentence into phonemes
+
+- Expects: _words_, which is an ordered list of strings representing the sentence, each string being a word.
+- Modifies:
+- Creates: _phonemes_, List of phonemes for each possibility of a word, for each word in the sentence (_words_)
+
+</details>
+
+<details>
+<summary>SendPhonemesToArduinoEvent</summary>
+
+Event that sends given phonemes to arduino
+
+- Expects: 
+    - _phonemes_, 3 dimensional list of strings: list of words, with every word being a list of decomposition, with each decomposition being list of phoneme-strings.
+    - *phoneme_patterns* dictionary with (phoneme : json pattern) combinations
+- Creates: 
+    - *sent_phonemes*, list 
+
+</details>
+
+## Overview of Main Event Flow
+
+request_data attributes that the events expect/modify/create, and their specification
+- **sentences**: [ [ str ] ] 
+- **phoneme_patterns**: Dict[str : JSON] dictionary with  available (phoneme : json pattern) combinations
+- **phonemes**: [ [ [ [ str ] ] ] ] list of sentences, which are lists of words, with every word being a list of decomposition, with each decomposition being list of phoneme-strings. _created by PhonemeDecompositionEvent_
+- **sent_phonemes**:  [ [ str ] ] the decompositions that were sent to the arduino, _created by SendPhonemesToArduinoEvent_
 
 ## Making Event Chains
 
@@ -130,11 +192,3 @@ So making a new event chain consists of the following steps:
 4. create a concrete class inheriting *AbstractRequest*.
 5. Put the entry in *EventType* in this class' *get_event_type()*
 6. Put the attributes in the class that the Events expect/modify.
-
-## Glossary
-
-* phoneme: a string representing a phoneme, full list in models.CMUPhonemes
-* phoneme_pattern: Dict/JSON format of the vibrational pattern for a certain phoneme
-* decomposition: a word split up in its phonemes
-* Word: depending on context either: a string, a list of alternative decompositions, or a list of phonemes
-* Sentence: list of words

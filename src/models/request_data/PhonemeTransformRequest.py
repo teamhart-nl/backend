@@ -81,14 +81,16 @@ class PhonemeTransformRequest(AbstractRequest):
             # Creation for purpose 1
             # Phonemes is None
 
-            # let sentences field be populated later or not at all
             if sentences is None:
+                # let sentences field be populated later or not at all
                 sentences = []
 
             elif len(sentences) == 0:
+                # if sentences is [] skip potentially splitting of next elif
                 pass
-            # if list of strings, split strings
+
             elif isinstance(sentences[0], str):
+                # if list of strings, split strings
                 sentences = split_sentences(sentences)
 
             self.sentences = sentences

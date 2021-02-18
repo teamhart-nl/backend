@@ -56,7 +56,8 @@ class PhonemeTransformRequest(AbstractRequest):
                                         following form
                                             (1) ["first sentence", "second sentence"0
                                             (2) [["first", "sentence"], ["second", "sentence"]]
-        @param phonemes             Phonemes to be send to the arduino
+        @param phonemes             Phonemes to be send to the arduino in form
+                                        ["PHO1", "PHO2"]
         @raises ValueError          If both sentences and phonemes are filled with data or when phoneme_patterns is None
         """
         if phoneme_patterns is None:

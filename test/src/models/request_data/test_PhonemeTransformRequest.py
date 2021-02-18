@@ -31,3 +31,10 @@ def test_constructor_standard_case_1_2():
     assert ptr.sentences[0][1] == "sentence"
     assert ptr.sentences[1][0] == "second"
     assert ptr.sentences[1][1] == "sentence"
+
+
+def test_constructor_standard_case_2():
+    ptr = PhonemeTransformRequest({}, phonemes=["PHO1", "PHO2"])
+
+    assert ptr.phonemes[0][0][0][0] == "PHO1"
+    assert ptr.phonemes[0][0][0][1] == "PHO2"

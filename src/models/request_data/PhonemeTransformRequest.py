@@ -33,7 +33,7 @@ class PhonemeTransformRequest(AbstractRequest):
     phoneme_patterns: Dict[str, Dict[str, Any]]
 
     # List of sentences, which are lists of words, 
-    # with every word being a list of decomposition, 
+    # with every word being a list of decompositions,
     # with each decomposition being list of phoneme-strings.
     # created by PhonemeDecompositionEvent
     phonemes: List[List[List[List[str]]]]
@@ -56,7 +56,7 @@ class PhonemeTransformRequest(AbstractRequest):
         @param phoneme_patterns     Dict[str, Dict[str, Any]] json patterns of phonemes
         @param sentences            Text to process, either (1) list of strings, or (2) list of list of strings in the
                                         following form
-                                            (1) ["first sentence", "second sentence"0
+                                            (1) ["first sentence", "second sentence"]
                                             (2) [["first", "sentence"], ["second", "sentence"]]
         @param phonemes             Phonemes to be send to the arduino in form
                                         ["PHO1", "PHO2"]

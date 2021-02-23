@@ -58,7 +58,7 @@ def test_handle_edge_case_1():
     assert len(request_data.phonemes) == 0
 
 
-def test_handle_edge_case_1():
+def test_handle_edge_case_2():
     ptr = PhonemeTransformRequest({}, sentences=["as;lfkdj"])
 
     ev = PhonemeDecompositionEvent()

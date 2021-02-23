@@ -59,7 +59,7 @@ def test_handle_edge_case_1():
 
 
 def test_handle_edge_case_2():
-    ptr = PhonemeTransformRequest({}, sentences=["as;lfkdj"])
+    ptr = PhonemeTransformRequest({}, sentences=["as;liked"])
 
     ev = PhonemeDecompositionEvent()
 

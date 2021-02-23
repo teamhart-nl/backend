@@ -7,7 +7,8 @@ from definitions import ROOT_DIR, RESOURCES
 
 import os
 
-connection = ArduinoConnection().connect_with_config(os.path.join(ROOT_DIR, "test\\resources\\arduino_config_test.json"))
+connection = ArduinoConnection()\
+                .connect_with_config(os.path.join(ROOT_DIR, "test\\resources\\arduino_config_test.json"))
 
 phoneme_patters = get_phoneme_patterns(RESOURCES)
 

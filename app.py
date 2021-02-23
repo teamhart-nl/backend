@@ -6,15 +6,14 @@ from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequ
 from src.models.CMUPhonemes import CMUPhonemes
 from src.modules.ArduinoConnection import ArduinoConnection
 
+from definitions import PRODUCTION, RESOURCES, API_BASE_URL
+
 import os
 import json
 from functools import wraps
 
 app = Flask(__name__)
 CORS(app)
-BASE_URL = '/api/v1'
-RESOURCES = os.getcwd() + '\\resources\\'
-production = False
 
 # =============================================================================
 #  Runtime configuration
@@ -23,7 +22,7 @@ production = False
 dispatcher = Dispatcher()
 
 # config singleton ArduinoConnection
-ArduinoConnection().connect_with_config(RESOURCES + 'arduino_config.json')
+ArduinoConnection().connect_with_config(os.path.join(RESOURCES, 'arduino_config.json'))
 
 
 def get_phoneme_patterns(resources: str):
@@ -77,7 +76,7 @@ def validate_json(f):
     return wrapper
 
 
-if production:
+if PRODUCTION:
     @app.route('/')
     def standard_route():
         return render_template("index.html")
@@ -89,7 +88,7 @@ if production:
         return render_template("index.html")
 
 
-@app.route(BASE_URL + '/phonemes')
+@app.route(API_BASE_URL + '/phonemes')
 def phonemes():
     """
     GET list of available phonemes
@@ -102,7 +101,7 @@ def phonemes():
     return jsonify({'phonemes': available}), 200
 
 
-@app.route(BASE_URL + '/microcontroller/phonemes', methods=['POST'])
+@app.route(API_BASE_URL + '/microcontroller/phonemes', methods=['POST'])
 @validate_json
 def send_phonemes():
     """
@@ -122,7 +121,7 @@ def send_phonemes():
     return "", 200
 
 
-@app.route(BASE_URL + '/microcontroller/words', methods=['POST'])
+@app.route(API_BASE_URL + '/microcontroller/words', methods=['POST'])
 @validate_json
 def send_words():
     """

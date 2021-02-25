@@ -1,7 +1,7 @@
 {
     "description" : "config settings for the arduino",
-    "mode" : "debug",
-    "baudrate" : 115200,
+    "mode" : "deug",
+    "baudrate" : 9600,
     "serial_numbers" : [
         "A9LTHTFV", 
         "55838333932351C0C191"
@@ -9,122 +9,122 @@
     "mapping" : [
         { 
             "coord" : 11,
-            "id" : 32
+            "id" : 0
         }, 
 
         { 
             "coord" : 12,
-            "id" : 33
+            "id" : 1
         }, 
 
         { 
             "coord" : 13,
-            "id" : 34
+            "id" : 2
         }, 
 
         { 
             "coord" : 14,
-            "id" : 35
+            "id" : 3
         }, 
 
         { 
             "coord" : 15,
-            "id" : 36
+            "id" : 4
         }, 
 
         { 
             "coord" : 16,
-            "id" : 37
+            "id" : 5
         }, 
 
         { 
             "coord" : 21,
-            "id" : 38
+            "id" : 6
         }, 
 
         { 
             "coord" : 22,
-            "id" : 39
+            "id" : 7
         },
         
         { 
             "coord" : 23,
-            "id" : 40
+            "id" : 8
         },
         
         { 
             "coord" : 24,
-            "id" : 41
+            "id" : 9
         },
         
         { 
             "coord" : 25,
-            "id" : 42
+            "id" : 10
         },
         
         { 
             "coord" : 26,
-            "id" : 43
+            "id" : 11
         },
         
         { 
             "coord" : 31,
-            "id" : 44
+            "id" : 16
         },
         
         { 
             "coord" : 32,
-            "id" : 45
+            "id" : 17
         },
         
         { 
             "coord" : 33,
-            "id" : 46
+            "id" : 18
         },
         
         { 
             "coord" : 34,
-            "id" : 47
+            "id" : 19
         },
 
         { 
             "coord" : 35,
-            "id" : 48
+            "id" : 20
         },
 
         { 
             "coord" : 36,
-            "id" : 49
+            "id" : 21
         },
         
         { 
             "coord" : 41,
-            "id" : 50
+            "id" : 22
         },
         
         { 
             "coord" : 42,
-            "id" : 51
+            "id" : 23
         },
         
         { 
             "coord" : 43,
-            "id" : 52
+            "id" : 24
         },
         
         { 
             "coord" : 44,
-            "id" : 53
+            "id" : 25
         },
         
         { 
             "coord" : 45,
-            "id" : 54
+            "id" : 26
         },
         
         { 
             "coord" : 46,
-            "id" : 55
+            "id" : 27
         }
     ]
 }

@@ -6,15 +6,17 @@ from typing import List, Dict, Any, Union
 
 def split_sentences(sentences: List[str]) -> List[List[str]]:
     """
-    Helper function to split sentences
+    Helper function to split sentences.
+    @param sentences    List of sentences in form ["sentence one", "sentence two"]
+    @returns            List of sentences where every sentence is divided into a list of words.
     """
 
     # the split sentences
     split_sen = []
 
     # loop through sentences
-    for sen in sentences:
-        split_sen.append(sen.split())
+    for sentence in sentences:
+        split_sen.append(sentence.split())
 
     return split_sen
 
@@ -24,14 +26,14 @@ class PhonemeTransformRequest(AbstractRequest):
     Request type for a transformation that includes a phonemes transformation.
     """
 
-    # List of sentences
+    # List of sentences in which each sentence is divided into a list of words
     sentences: List[List[str]]
 
     # Mapping of phoneme to the JSON pattern
     phoneme_patterns: Dict[str, Dict[str, Any]]
 
     # List of sentences, which are lists of words, 
-    # with every word being a list of decomposition, 
+    # with every word being a list of decompositions,
     # with each decomposition being list of phoneme-strings.
     # created by PhonemeDecompositionEvent
     phonemes: List[List[List[List[str]]]]
@@ -52,10 +54,17 @@ class PhonemeTransformRequest(AbstractRequest):
         Function throws an error when both the sentences and phonemes parameter are filled.
 
         @param phoneme_patterns     Dict[str, Dict[str, Any]] json patterns of phonemes
-        @param sentences            Text to process, either list of strings, or list of list of strings
-        @param phonemes             Phonemes to be send to the arduino
-        @raises ValueError          If both sentences and phonemes are filled with data
+        @param sentences            Text to process, either (1) list of strings, or (2) list of list of strings in the
+                                        following form
+                                            (1) ["first sentence", "second sentence"]
+                                            (2) [["first", "sentence"], ["second", "sentence"]]
+        @param phonemes             Phonemes to be send to the arduino in form
+                                        ["PHO1", "PHO2"]
+        @raises ValueError          If both sentences and phonemes are filled with data or when phoneme_patterns is None
         """
+        if phoneme_patterns is None:
+            raise ValueError("PhonemeTransformRequest.__init__: phoneme_patterns cannot be None")
+
         if sentences is not None and phonemes is not None:
             raise ValueError("PhonemeTransformRequest.__init__: both sentences and phonemes parameter was passed")
 
@@ -72,12 +81,16 @@ class PhonemeTransformRequest(AbstractRequest):
             # Creation for purpose 1
             # Phonemes is None
 
-            # let sentences field be populated later or not at all
             if sentences is None:
+                # let sentences field be populated later or not at all
                 sentences = []
 
-            # if list of strings, split strings
+            elif len(sentences) == 0:
+                # if sentences is [] skip potentially splitting of next elif
+                pass
+
             elif isinstance(sentences[0], str):
+                # if list of strings, split strings
                 sentences = split_sentences(sentences)
 
             self.sentences = sentences

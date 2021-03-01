@@ -6,6 +6,7 @@ from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequ
 from src.models.CMUPhonemes import CMUPhonemes
 from src.modules.ArduinoConnection import ArduinoConnection
 
+from definitions import PRODUCTION, RESOURCES, API_BASE_URL
 
 import os
 import json
@@ -13,9 +14,6 @@ from functools import wraps
 
 app = Flask(__name__)
 CORS(app)
-BASE_URL = '/api/v1'
-RESOURCES = os.getcwd() + '\\resources\\'
-production = False
 
 # =============================================================================
 #  Runtime configuration
@@ -24,24 +22,32 @@ production = False
 dispatcher = Dispatcher()
 
 # config singleton ArduinoConnection
-ArduinoConnection().connect_with_config(RESOURCES + 'arduino_config.json')
+ArduinoConnection().connect_with_config(os.path.join(RESOURCES, 'arduino_config.json'))
 
-# load the phoneme patterns 
-phoneme_patterns = {}
 
-# loop through available phoneme patterns
-for pattern_file in os.listdir(RESOURCES + '\\phoneme_patterns\\'):
-    # get phoneme name
-    phoneme = pattern_file.replace('.json', '')
+def get_phoneme_patterns(resources: str):
+    # load the phoneme patterns
+    patterns = {}
 
-    # CMUPhonemes are the phonemes supported in nltk.cmudict()
-    if not (phoneme in CMUPhonemes): 
-        raise NameError('The resource ' + phoneme + '.json is not a valid phoneme name')
+    # loop through available phoneme patterns
+    for pattern_file in os.listdir(resources + '\\phoneme_patterns\\'):
+        # get phoneme name
+        phoneme = pattern_file.replace('.json', '')
 
-    # load all patterns. This means if change of patterns, restart
-    with open(RESOURCES + '\\phoneme_patterns\\' + pattern_file, 'r') as f:
-        json_pattern = json.load(f)
-    phoneme_patterns[phoneme] = json_pattern
+        # CMUPhonemes are the phonemes supported in nltk.cmudict()
+        if not (phoneme in CMUPhonemes):
+            raise NameError('The resource ' + phoneme + '.json is not a valid phoneme name')
+
+        # load all patterns. This means if change of patterns, restart
+        with open(resources + '\\phoneme_patterns\\' + pattern_file, 'r') as f:
+            json_pattern = json.load(f)
+        patterns[phoneme] = json_pattern
+
+    return patterns
+
+
+phoneme_patterns = get_phoneme_patterns(RESOURCES)
+
 
 # =============================================================================
 #  API ENDPOINT       
@@ -56,23 +62,25 @@ def validate_json(f):
     def wrapper(*args, **kw):
         try:
             data = request.json
-        except Exception: 
+        except Exception:
             # problem reading in json
             msg = "payload must be a valid json"
             return jsonify({"error": msg}), 400
-        if data is None:  
+        if data is None:
             # empty while json is expected
             msg = "payload must be a valid json"
             return jsonify({"error": msg}), 400
-        else:    
+        else:
             return f(*args, **kw)
+
     return wrapper
 
 
-if production:
+if PRODUCTION:
     @app.route('/')
     def standard_route():
         return render_template("index.html")
+
 
     @app.errorhandler(404)
     @app.errorhandler(500)
@@ -80,7 +88,7 @@ if production:
         return render_template("index.html")
 
 
-@app.route(BASE_URL + '/phonemes')
+@app.route(API_BASE_URL + '/phonemes')
 def phonemes():
     """
     GET list of available phonemes
@@ -93,7 +101,7 @@ def phonemes():
     return jsonify({'phonemes': available}), 200
 
 
-@app.route(BASE_URL + '/microcontroller/phonemes', methods=['POST'])
+@app.route(API_BASE_URL + '/microcontroller/phonemes', methods=['POST'])
 @validate_json
 def send_phonemes():
     """
@@ -104,7 +112,7 @@ def send_phonemes():
     data = request.json
 
     # make the event request data
-    request_data = PhonemeTransformRequest(phoneme_patterns, phonemes = data['phonemes'])
+    request_data = PhonemeTransformRequest(phoneme_patterns, phonemes=data['phonemes'])
 
     # send to dispatcher
     dispatcher.handle(request_data)
@@ -113,7 +121,7 @@ def send_phonemes():
     return "", 200
 
 
-@app.route(BASE_URL + '/microcontroller/words', methods=['POST'])
+@app.route(API_BASE_URL + '/microcontroller/words', methods=['POST'])
 @validate_json
 def send_words():
     """
@@ -124,16 +132,17 @@ def send_words():
     data = request.json
 
     # issue event
-    sentence_request = PhonemeTransformRequest( phoneme_patterns, sentences= [data['words']] )
+    sentence_request = PhonemeTransformRequest(phoneme_patterns, sentences=[data['words']])
     dispatcher.handle(sentence_request)
 
     # create result json with all sent phonemes
-    result = {"words": data['words'], "decomposition" : []}
+    result = {"words": data['words'], "decomposition": []}
     for decomposition in sentence_request.sent_phonemes:
         result["decomposition"].append({"phonemes": decomposition})
 
     # send return, success code
     return jsonify(result), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)

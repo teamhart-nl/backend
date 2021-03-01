@@ -135,15 +135,14 @@ class ArduinoConnection(metaclass=Singleton):
                 self.device.write(message.encode('ascii'))
 
                 # Make sure the Arduino always gives an output, otherwise Python will wait forever.
-                line = self.device.readline().strip().decode('ascii')
-                # TODO make sure we can get Arduino status
-                Logger.log_info("Arduino says: " + line)
-                line = ""
+                arduino_log = self.device.readline().strip().decode('ascii', errors="ignore")
+                Logger.log_info("Arduino says: " + arduino_log)
             except Exception as e:
                 Logger.log_warning("ArduinoConnection.query: error occurred during sending. Complete error: " + str(e))
+                arduino_log = "ArduinoConnection.query: Arduino could not be obtained."
 
         else:
             Logger.log_info("ArduinoConnection.query: A query would have now arrived at the arduino")
-            line = ""
+            arduino_log = "Debug log"
 
-        return line
+        return arduino_log

@@ -8,6 +8,16 @@ import nltk
 from typing import List
 
 
+# Initialize arpabet dictionary
+try:
+    arpabet = nltk.corpus.cmudict.dict()
+    Logger.log_info("ARPABET initialized")
+except LookupError:
+    nltk.download('cmudict')
+    arpabet = nltk.corpus.cmudict.dict()
+    Logger.log_info("ARPABET initialized")
+
+
 class PhonemeDecompositionEvent(AbstractEvent):
     """
     Transforms English sentences into phonemes
@@ -17,14 +27,6 @@ class PhonemeDecompositionEvent(AbstractEvent):
     """
 
     PRIORITY: int = 100
-
-    def __init__(self):
-        # Initialize arpabet dictionary
-        try:
-            self.arpabet = nltk.corpus.cmudict.dict()
-        except LookupError:
-            nltk.download('cmudict')
-            self.arpabet = nltk.corpus.cmudict.dict()
 
     def handle(self, request_data: AbstractRequest):
         # Initialize list for phonemes.
@@ -39,7 +41,7 @@ class PhonemeDecompositionEvent(AbstractEvent):
             for word in sentence:
                 try:
                     # Try to transform the word into phonemes using the Arpabet and add it to the list
-                    arpabet_return = self.arpabet[str(word).lower()]
+                    arpabet_return = arpabet[str(word).lower()]
 
                     # remove digits from arpabet return
                     # TODO check if this is the way in which we want to handle digits? Wouldn't it be better to write

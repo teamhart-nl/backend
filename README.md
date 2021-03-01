@@ -9,7 +9,7 @@ Flask can be run simply with `flask run`
 2. Put the `index.html` just generated in the `templates` folder in the backend.
 3. Put the rest of the generated frontend files in the `static` folder in the backend.
 4. Change the links in the `index.html` referring to js/img/css files by adding the prefix `static/`
-5. Change the `production` boolean in the `app.py` file to `True`.
+5. Change the `PRODUCTION` boolean in the `definitions.py` file to `True`.
 6. Generate the distribution using the command `pyinstaller --add-data "resources;resources" --add-data "templates;templates" --add-data "static;static" app.py`
 
 # API Specification

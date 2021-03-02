@@ -1,4 +1,4 @@
-name: backend
+name: Test backend using flake8 and pytest
 
 on: [push]
 

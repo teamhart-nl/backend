@@ -1,6 +1,7 @@
 import pkgutil
 from typing import Dict, List
-import os, importlib
+import os 
+import importlib
 
 from src.helpers.Logger import Logger
 from src import events
@@ -65,4 +66,3 @@ class Dispatcher(metaclass=Singleton):
                 Logger.log_warning("Dispatcher.handle: Stopped event was of type " + event.__class__.__name__)
                 Logger.log_warning("Complete error: " + str(e))
                 return
-

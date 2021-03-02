@@ -36,7 +36,7 @@ class SendPhonemesToArduinoEvent(AbstractEvent):
                     # assume deconstruction is valid until proven otherwise
                     valid_deconstruction = True
 
-                    # check for every phoneme if it is known         
+                    # check for every phoneme if it is known
                     for phoneme in word[i]:
                         # check if phoneme is known
                         if phoneme not in request_data.phoneme_patterns.keys():

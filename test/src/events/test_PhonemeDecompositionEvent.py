@@ -9,8 +9,8 @@ def test_handle_basic_case_1():
 
     request_data = ev.handle(ptr)
 
-    assert request_data.phonemes[0][0][0][0] == "HH"
-    assert request_data.phonemes[0][0][0][1] == "IY"
+    assert request_data.phonemes[0][0][0][0] == "H"
+    assert request_data.phonemes[0][0][0][1] == "EE"
     assert request_data.phonemes[0][0][0][2] == "T"
 
 
@@ -22,7 +22,7 @@ def test_handle_basic_case_2():
     request_data = ev.handle(ptr)
 
     assert request_data.phonemes[0][0][0][0] == "B"
-    assert request_data.phonemes[0][1][0][0] == "HH"
+    assert request_data.phonemes[0][1][0][0] == "H"
 
 
 def test_handle_basic_case_3():
@@ -34,7 +34,7 @@ def test_handle_basic_case_3():
 
     assert request_data.phonemes[0][0][0][0] == "S"
     assert request_data.phonemes[0][1][0][0] == "W"
-    assert request_data.phonemes[0][1][1][0] == "HH"
+    assert request_data.phonemes[0][1][1][0] == "H"
 
 
 def test_handle_basic_case_4():
@@ -45,7 +45,7 @@ def test_handle_basic_case_4():
     request_data = ev.handle(ptr)
 
     assert request_data.phonemes[0][0][0][0] == "S"
-    assert request_data.phonemes[1][0][0][0] == "AH"
+    assert request_data.phonemes[1][0][0][0] == "UH"
 
 
 def test_handle_edge_case_1():

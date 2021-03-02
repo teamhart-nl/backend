@@ -100,7 +100,7 @@ BODY
 
 EXAMPLE CURL (windows)
 
-    curl -H "Content-Type: application/json" -d "{ \"words\": [\"Team\", \"HART\"] }" http://localhost:5000/api/v1/microcontroller/words
+    curl -H "Content-Type: application/json" -d "{ \"words\": [\"Team\", \"Treat\"] }" http://localhost:5000/api/v1/microcontroller/words
 
 RESULT:
 

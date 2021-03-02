@@ -30,7 +30,7 @@ def get_phoneme_patterns(resources: str):
     patterns = {}
 
     # loop through available phoneme patterns
-    for pattern_file in os.listdir(resources + '\\phoneme_patterns\\'):
+    for pattern_file in os.listdir(os.path.join(resources, 'phoneme_patterns')):
         # get phoneme name
         phoneme = pattern_file.replace('.json', '')
 

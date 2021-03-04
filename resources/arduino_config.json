@@ -1,6 +1,6 @@
 {
     "description" : "config settings for the arduino",
-    "mode" : "deug",
+    "mode" : "debug",
     "baudrate" : 115200,
     "serial_numbers" : [
         "A9LTHTFV", 

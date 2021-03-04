@@ -50,12 +50,10 @@ class ArduinoConnection(metaclass=Singleton):
 
         # set found device if not in backend-debug mode
         if not self.debug:
-            self.device = serial.Serial(self.find_arduino_port(), baudrate=self.baudrate)
-
-            Logger.log_info("connecting to Arduino...")
-            time.sleep(5)
-            # TODO make robust
-            Logger.log_info("Connected to Arduino")
+            port = self.find_arduino_port()
+            Logger.log_info("Connecting to port: " + port)
+            self.device = serial.Serial(port, baudrate=self.baudrate, timeout=1)
+            Logger.log_info("Connection is open: " + str(self.device.is_open))
 
         self.configured = True
 

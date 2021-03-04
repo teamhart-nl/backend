@@ -11,6 +11,12 @@ from src.helpers.SingletonHelper import Singleton
 from src.models.EventTypeEnum import EventType
 from src.models.request_data import AbstractRequest
 
+from src.events.PhonemeDecompositionEvent import PhonemeDecompositionEvent
+from src.events.SendPhonemesToArduinoEvent import SendPhonemesToArduinoEvent
+
+# from src.events.GoogleTranslateEvent import GoogleTranslateEvent
+# from src.events.GoogleTranscribeFileEvent import GoogleTranscribeEvent
+
 
 class Dispatcher(metaclass=Singleton):
     """

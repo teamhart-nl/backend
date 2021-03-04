@@ -2,7 +2,7 @@
 
 Install requirements with `pip install -r /path/to/requirements.txt`
 
-Flask can be run simply with `flask run`
+Flask can be run simply with `python app.py`
 
 ## Creating distribution
 1. build the frontend with `npm run build`

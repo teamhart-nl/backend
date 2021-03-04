@@ -3,6 +3,8 @@ from src.events.AbstractEvent import AbstractEvent
 from google.cloud import translate_v2 as translate
 import six
 
+from typing import List
+
 from src.helpers.Logger import Logger
 from src.models.EventTypeEnum import EventType
 from src.models.request_data.AbstractRequest import AbstractRequest
@@ -57,7 +59,7 @@ class GoogleTranslateEvent(AbstractEvent):
         return GoogleTranslateEvent.PRIORITY
 
     @staticmethod
-    def get_compatible_events() -> [EventType]:
+    def get_compatible_events() -> List[EventType]:
         return [
             EventType.TRANSLATE_USING_GOOGLE_API,
             EventType.COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION

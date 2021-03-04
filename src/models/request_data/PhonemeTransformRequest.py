@@ -32,7 +32,7 @@ class PhonemeTransformRequest(AbstractRequest):
     # Mapping of phoneme to the JSON pattern
     phoneme_patterns: Dict[str, Dict[str, Any]]
 
-    # List of sentences, which are lists of words, 
+    # List of sentences, which are lists of words,
     # with every word being a list of decompositions,
     # with each decomposition being list of phoneme-strings.
     # created by PhonemeDecompositionEvent

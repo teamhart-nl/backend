@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 from src.models.EventTypeEnum import EventType
 from src.models.request_data import AbstractRequest
 
+from typing import List
+
 
 class AbstractEvent(ABC):
     """
@@ -27,7 +29,7 @@ class AbstractEvent(ABC):
 
     @staticmethod
     @abstractmethod
-    def get_compatible_events() -> [EventType]:
+    def get_compatible_events() -> List[EventType]:
         """
         Returns a list of all EventTypes that this event is part of.
         """

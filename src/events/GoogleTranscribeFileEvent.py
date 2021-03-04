@@ -8,6 +8,8 @@ from src.modules.google_api.GoogleApiWrapper import GoogleApiWrapper
 
 from google.cloud import speech
 
+from typing import List
+
 
 class GoogleTranscribeEvent(AbstractEvent):
     """
@@ -55,8 +57,7 @@ class GoogleTranscribeEvent(AbstractEvent):
         return GoogleTranscribeEvent.PRIORITY
 
     @staticmethod
-    def get_compatible_events() -> [EventType]:
+    def get_compatible_events() -> List[EventType]:
         return [
             EventType.TRANSCRIBE_USING_GOOGLE_API,
-            EventType.COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION
-        ]
+            EventType.COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION ]

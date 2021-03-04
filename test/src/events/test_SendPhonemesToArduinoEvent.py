@@ -8,14 +8,16 @@ from definitions import ROOT_DIR, RESOURCES
 import os
 
 connection = ArduinoConnection()\
-                .connect_with_config(os.path.join(ROOT_DIR, "test\\resources\\arduino_config_test.json"))
+                .connect_with_config(os.path.join(ROOT_DIR, 'test', 'resources', 'arduino_config_test.json'))
 
-phoneme_patters = get_phoneme_patterns(RESOURCES)
+phoneme_patterns = get_phoneme_patterns(RESOURCES)
 
 
 def test_handle_basic_case_1():
-    ptr = PhonemeTransformRequest(phoneme_patters, phonemes=["HH"])
+    ptr = PhonemeTransformRequest(phoneme_patterns, phonemes=["H"])
 
     request_data = SendPhonemesToArduinoEvent().handle(ptr)
 
-    assert request_data.sent_phonemes[0][0] == "HH"
+    print(request_data.sent_phonemes)
+
+    assert request_data.sent_phonemes[0][0] == "H"

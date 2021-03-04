@@ -1,6 +1,6 @@
 from src.events.AbstractEvent import AbstractEvent
 
-from google.cloud import translate_v2 as translate
+from google.cloud import translate_v3 as translate
 import six
 
 from typing import List

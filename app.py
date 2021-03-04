@@ -148,7 +148,4 @@ def send_words():
     return jsonify(result), 200
 
 
-app.run(debug=False, threaded=False)
-
-# if __name__ == '__main__':
-#     app.run(debug=True, threaded=False)
+app.run(debug=False, threaded=True)

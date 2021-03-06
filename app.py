@@ -24,10 +24,12 @@ dispatcher = Dispatcher()
 # config singleton ArduinoConnection
 ArduinoConnection().connect_with_config(os.path.join(RESOURCES, 'arduino_config.json'))
 
-# load the phoneme patterns
 
 def get_phoneme_patterns(resources: str):
-    # load the phoneme patterns
+    """
+    load the phoneme patterns
+    """
+
     patterns = {}
 
     # loop through available phoneme patterns
@@ -146,5 +148,5 @@ def send_words():
     return jsonify(result), 200
 
 
-if __name__ == '__main__':
-    app.run(debug=True, threaded=True)
+if PRODUCTION:
+    app.run(debug=False, threaded=True)

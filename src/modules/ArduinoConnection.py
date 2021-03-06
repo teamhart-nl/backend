@@ -50,12 +50,15 @@ class ArduinoConnection(metaclass=Singleton):
 
         # set found device if not in backend-debug mode
         if not self.debug:
-            self.device = serial.Serial(self.find_arduino_port(), baudrate=self.baudrate)
-
-            Logger.log_info("connecting to Arduino...")
-            time.sleep(5)
-            # TODO make robust
-            Logger.log_info("Connected to Arduino")
+            try:
+                port = self.find_arduino_port()
+                Logger.log_info("Connecting to port: " + port)
+                self.device = serial.Serial(port, baudrate=self.baudrate, timeout=1)
+                Logger.log_info("Connection is open: " + str(self.device.is_open))
+            except Exception as e:
+                Logger.log_warning("Arduino connection NOT successfully created! " + str(e))
+                self.configured = False
+                return
 
         self.configured = True
 
@@ -135,15 +138,14 @@ class ArduinoConnection(metaclass=Singleton):
                 self.device.write(message.encode('ascii'))
 
                 # Make sure the Arduino always gives an output, otherwise Python will wait forever.
-                line = self.device.readline().strip().decode('ascii')
-                # TODO make sure we can get Arduino status
-                Logger.log_info("Arduino says: " + line)
-                line = ""
+                arduino_log = self.device.readline().strip().decode('ascii', errors="ignore")
+                Logger.log_info("Arduino says: " + arduino_log)
             except Exception as e:
                 Logger.log_warning("ArduinoConnection.query: error occurred during sending. Complete error: " + str(e))
+                arduino_log = "ArduinoConnection.query: Arduino could not be obtained."
 
         else:
             Logger.log_info("ArduinoConnection.query: A query would have now arrived at the arduino")
-            line = ""
+            arduino_log = "Debug log"
 
-        return line
+        return arduino_log

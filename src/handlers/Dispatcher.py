@@ -11,6 +11,12 @@ from src.helpers.SingletonHelper import Singleton
 from src.models.EventTypeEnum import EventType
 from src.models.request_data import AbstractRequest
 
+### SOLELY NEEDED FOR THE DISTRIBUTION WITH PYINSTALLER (SADFACE)
+from src.events.PhonemeDecompositionEvent import PhonemeDecompositionEvent
+from src.events.SendPhonemesToArduinoEvent import SendPhonemesToArduinoEvent
+from src.events.GoogleTranscribeFileEvent import GoogleTranscribeEvent
+from src.events.GoogleTranslateEvent import GoogleTranslateEvent
+
 
 class Dispatcher(metaclass=Singleton):
     """

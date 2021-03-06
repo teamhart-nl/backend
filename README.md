@@ -2,14 +2,25 @@
 
 Install requirements with `pip install -r /path/to/requirements.txt`
 
-Flask can be run simply with `flask run`
+## Running the application
+### Development mode
+For running the application in development mode
+1. Set the environment variables `FLASK_ENV=development` and `FLASK_APP=app.py` (on Windows this is done by `set <varname>=<varvalue>`)
+2. Set the PRODUCTION boolean in definitions.py to `False`
+3. Run the app with `flask run --no-reload`
+
+### Production mode (not distribution)
+For running the application in production mode
+1. Set the environment variables `FLASK_ENV=production` and `FLASK_APP=app.py` (on Windows this is done by `set <varname>=<varvalue>`)
+2. Set the PRODUCTION boolean in definitions.py to `TRUE`
+3. Run the app with `flask run`
 
 ## Creating distribution
 1. build the frontend with `npm run build`
 2. Put the `index.html` just generated in the `templates` folder in the backend.
 3. Put the rest of the generated frontend files in the `static` folder in the backend.
 4. Change the links in the `index.html` referring to js/img/css files by adding the prefix `static/`
-5. Change the `production` boolean in the `app.py` file to `True`.
+5. Change the `PRODUCTION` boolean in the `definitions.py` file to `True`.
 6. Generate the distribution using the command `pyinstaller --add-data "resources;resources" --add-data "templates;templates" --add-data "static;static" app.py`
 
 # API Specification

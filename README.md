@@ -2,7 +2,18 @@
 
 Install requirements with `pip install -r /path/to/requirements.txt`
 
-Flask can be run simply with `python app.py`
+## Running the application
+### Development mode
+For running the application in development mode
+1. Set the environment variables `FLASK_ENV=development` and `FLASK_APP=app.py` (on Windows this is done by `set <varname>=<varvalue>`)
+2. Set the PRODUCTION boolean in definitions.py to `False`
+3. Run the app with `flask run --no-reload`
+
+### Production mode (not distribution), no use for it yet?
+For running the application in production mode
+1. Set the environment variables `FLASK_ENV=production` and `FLASK_APP=app.py` (on Windows this is done by `set <varname>=<varvalue>`)
+2. Set the PRODUCTION boolean in definitions.py to `TRUE`
+3. Run the app with `flask run`
 
 ## Creating distribution
 1. build the frontend with `npm run build`

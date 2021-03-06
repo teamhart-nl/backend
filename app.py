@@ -148,4 +148,5 @@ def send_words():
     return jsonify(result), 200
 
 
-app.run(debug=False, threaded=True)
+if PRODUCTION:
+    app.run(debug=False, threaded=True)

@@ -9,7 +9,7 @@ For running the application in development mode
 2. Set the PRODUCTION boolean in definitions.py to `False`
 3. Run the app with `flask run --no-reload`
 
-### Production mode (not distribution), no use for it yet?
+### Production mode (not distribution)
 For running the application in production mode
 1. Set the environment variables `FLASK_ENV=production` and `FLASK_APP=app.py` (on Windows this is done by `set <varname>=<varvalue>`)
 2. Set the PRODUCTION boolean in definitions.py to `TRUE`

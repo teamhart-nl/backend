@@ -29,6 +29,8 @@ class Dispatcher(metaclass=Singleton):
     event_type_map: Dict[EventType, List]
 
     def __init__(self):
+        Logger.log_info("Initializing dispatcher.")
+
         # Initialize event_type_map
         self.event_type_map = {}
 

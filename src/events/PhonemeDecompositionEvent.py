@@ -12,11 +12,10 @@ from typing import List
 # Initialize arpabet dictionary
 try:
     arpabet = nltk.corpus.cmudict.dict()
-    Logger.log_info("ARPABET initialized")
 except LookupError:
     nltk.download('cmudict')
     arpabet = nltk.corpus.cmudict.dict()
-    Logger.log_info("ARPABET initialized")
+    Logger.log_info("ARPABET downloaded!")
 
 
 class PhonemeDecompositionEvent(AbstractEvent):

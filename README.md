@@ -7,7 +7,7 @@ Install requirements with `pip install -r /path/to/requirements.txt`
 For running the application in development mode
 1. Set the environment variables `FLASK_ENV=development` and `FLASK_APP=app.py` (on Windows this is done by `set <varname>=<varvalue>`)
 2. Set the PRODUCTION boolean in definitions.py to `False`
-3. Run the app with `flask run --no-reload`
+3. Run the app with `flask run`
 
 ### Production mode (not distribution)
 For running the application in production mode

@@ -26,11 +26,11 @@ if os.environ.get("WERKZEUG_RUN_MAIN") or PRODUCTION:
 
     phoneme_patterns = get_phoneme_patterns(RESOURCES)
 
+    # Import routes
+    import src.routes.ProductionRoute
+    import src.routes.Routes
+    Logger.log_info("Routes initialized")
+
 
 if __name__ == "__main__" and PRODUCTION:
     app.run(debug=False, use_reloader=False, threaded=True)
-
-
-import src.routes.ProductionRoute
-import src.routes.Routes
-Logger.log_info("Routes initialized")

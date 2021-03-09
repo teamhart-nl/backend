@@ -6,6 +6,7 @@ from flask_cors import CORS
 from definitions import PRODUCTION, RESOURCES
 from src.handlers.Dispatcher import Dispatcher
 from src.helpers.LoadPhonemeJsonHelper import get_phoneme_patterns
+from src.helpers.Logger import Logger
 from src.modules.ArduinoConnection import ArduinoConnection
 
 app = Flask(__name__)
@@ -32,3 +33,4 @@ if __name__ == "__main__" and PRODUCTION:
 
 import src.routes.ProductionRoute
 import src.routes.Routes
+Logger.log_info("Routes initialized")

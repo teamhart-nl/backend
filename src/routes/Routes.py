@@ -73,4 +73,3 @@ def send_words():
     # send return, success code
     return jsonify(result), 200
 
-print("Routes initialized!")

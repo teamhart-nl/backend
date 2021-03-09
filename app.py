@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 
 from definitions import PRODUCTION, RESOURCES
@@ -16,7 +16,7 @@ dispatcher = None
 phoneme_patterns = None
 
 
-if os.environ.get("WERKZEUG_RUN_MAIN") or PRODUCTION:
+if os.environ.get("WERKZEUG_RUN_MAIN") or __name__ == "__main__":
     # Runtime configuration
 
     dispatcher = Dispatcher()
@@ -27,9 +27,20 @@ if os.environ.get("WERKZEUG_RUN_MAIN") or PRODUCTION:
     phoneme_patterns = get_phoneme_patterns(RESOURCES)
 
     # Import routes
-    import src.routes.ProductionRoute
     import src.routes.Routes
     Logger.log_info("Routes initialized")
+
+
+if PRODUCTION:
+    @app.route('/', methods=['GET'])
+    def standard_route():
+        return render_template("index.html")
+
+
+    @app.errorhandler(404)
+    @app.errorhandler(500)
+    def error_route(e):
+        return render_template("index.html")
 
 
 if __name__ == "__main__" and PRODUCTION:

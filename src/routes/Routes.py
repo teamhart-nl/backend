@@ -31,7 +31,6 @@ def send_phonemes():
     """
     POST sending phoneme(s) to the microcontroller
     """
-    print("hey")
 
     # get body from api
     data = request.json

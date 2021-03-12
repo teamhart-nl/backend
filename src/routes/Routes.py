@@ -3,6 +3,7 @@ from flask import request, jsonify
 from definitions import API_BASE_URL, RESOURCES
 from src.helpers.LoadPhonemeJsonHelper import get_phoneme_patterns
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
+from src.models.request_data.TranslateRequest import TranslateRequest
 from src.routes.RouteValidation import validate_json
 
 from app import app, dispatcher
@@ -73,3 +74,29 @@ def send_words():
     # send return, success code
     return jsonify(result), 200
 
+
+@app.route(API_BASE_URL + "/microcontroller/sentences", methods=['POST'])
+@validate_json
+def send_sentences():
+    """
+    POST send sentence(s) to the microcontroller
+    """
+
+    # get body from api
+    data = request.json
+
+    # issue translate event
+    translate_request = TranslateRequest(original_sentences=data['sentences'], source_language=data['language'])
+    translate_request = dispatcher.handle(translate_request)
+
+    # Issue decomposition into phonemes and sending to microcontroller
+    decomposition_request = PhonemeTransformRequest(sentences=translate_request.translated_sentences)
+    dispatcher.handle(decomposition_request)
+
+    result = {
+        "sentences": translate_request.original_sentences,
+        "translation": translate_request.translated_sentences,
+    }
+
+    # send return, success code
+    return jsonify(result), 200

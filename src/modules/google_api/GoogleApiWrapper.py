@@ -25,9 +25,16 @@ class GoogleApiWrapper(metaclass=Singleton):
     def checkGoogleApiConnection(self):
         # Logging general information
         Logger.log_info("GoogleApiWrapper.checkGoogleApiConnection: Checking connection to Google API")
-        Logger.log_info("GoogleApiWrapper.checkGoogleApiConnection: Currently, "
-                        "the path to your credentials file is set to: " +
-                        os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'))
+        cred = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+        if cred is None:
+            Logger.log_info("GoogleApiWrapper.checkGoogleApiConnection: Currently, no google credentials are set. "
+                            "Operations that use the Google API will therefore not work until you set your credentials "
+                            "and restart the application.")
+            return
+        else:
+            Logger.log_info("GoogleApiWrapper.checkGoogleApiConnection: Currently, "
+                            "the path to your credentials file is set to: " +
+                            os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'))
 
         try:
             # If you don't specify credentials when constructing the client, the
@@ -43,10 +50,11 @@ class GoogleApiWrapper(metaclass=Singleton):
             # Logging info that connection has succeeded
             Logger.log_info("GoogleApiWrapper.checkGoogleApiConnection: "
                             "Google API credentials accepted, connection succeeded!")
-        except DefaultCredentialsError:
+        except DefaultCredentialsError as e:
             # Logging information that connection has failed
             Logger.log_warning("GoogleApiWrapper.checkGoogleApiConnection: "
                                "Could not connect to Google API")
+            Logger.log_warning(e)
             Logger.log_warning("GoogleApiWrapper.checkGoogleApiConnection: "
                                "Make sure to set you google credentials correctly!")
 

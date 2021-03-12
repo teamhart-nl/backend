@@ -1,6 +1,8 @@
+from google.cloud.translate_v3 import TranslateTextResponse
+
 from src.events.AbstractEvent import AbstractEvent
 
-from google.cloud import translate_v3 as translate
+from google.cloud import translate
 import six
 
 from typing import List
@@ -20,7 +22,7 @@ class GoogleTranslateEvent(AbstractEvent):
     PRIORITY: int = 190
 
     def __init__(self):
-        self.translate_client = translate.Client()
+        self.translate_client = translate.TranslationServiceClient()
 
     def handle(self, request_data: AbstractRequest):
         # Check if the Google API wrapper is authenticated
@@ -33,19 +35,23 @@ class GoogleTranslateEvent(AbstractEvent):
             raise ValueError("GoogleTranslateEvent.handle: request_data is of type " + str(type(request_data)) + ".")
 
         # Define local string decode function
-        def decode(sen: str) -> str:
-            if isinstance(sen, six.binary_type):
-                return sen.decode("utf-8")
+        # def decode(sen: str) -> str:
+        #     if isinstance(sen, six.binary_type):
+        #         return sen.decode("utf-8")
 
         # Decode sentences using map
-        decoded_sentences = map(decode, request_data.original_sentences)
+        # decoded_sentences = list(map(decode, request_data.original_sentences))
 
         # Define local translation decode function
-        def translate_sentence(sen: str) -> str:
-            return self.translate_client.translate(sen, request_data.source_language, request_data.target_language)
+        def translate_sentence(sen: str) -> TranslateTextResponse:
+            return self.translate_client.translate_text(
+                contents=[sen],
+                parent="projects/solid-century-301518/locations/global",
+                source_language_code=request_data.source_language,
+                target_language_code=request_data.target_language).translations[0].translated_text
 
         # Translate each of the sentences in the request data
-        request_data.translated_sentences = map(translate_sentence, decoded_sentences)
+        request_data.translated_sentences = list(map(translate_sentence, request_data.original_sentences))
 
         # Log information
         Logger.log_info("GoogleTranslateEvent.handle: Completed GoogleTranslateEvent with translated sentences:")

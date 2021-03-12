@@ -5,9 +5,9 @@ from flask_cors import CORS
 
 from definitions import PRODUCTION, RESOURCES
 from src.handlers.Dispatcher import Dispatcher
-from src.helpers.LoadPhonemeJsonHelper import get_phoneme_patterns
 from src.helpers.Logger import Logger
 from src.modules.ArduinoConnection import ArduinoConnection
+from src.modules.google_api.GoogleApiWrapper import GoogleApiWrapper
 
 app = Flask(__name__)
 CORS(app)
@@ -22,6 +22,9 @@ if os.environ.get("WERKZEUG_RUN_MAIN") or __name__ == "__main__":
 
     # config singleton ArduinoConnection
     ArduinoConnection().connect_with_config(os.path.join(RESOURCES, 'arduino_config.json'))
+
+    # Check if google api is working correctly
+    GoogleApiWrapper()
 
     # Import routes
     import src.routes.Routes

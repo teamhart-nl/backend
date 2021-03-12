@@ -19,20 +19,14 @@ def test_split_sentences_edge():
     assert len(ss) == 0
 
 
-def test_constructor_error_1():
-    with pytest.raises(ValueError,
-                       match="PhonemeTransformRequest.__init__: phoneme_patterns cannot be None"):
-        PhonemeTransformRequest(None)
-
-
 def test_constructor_error_2():
     with pytest.raises(ValueError,
                        match="PhonemeTransformRequest.__init__: both sentences and phonemes parameter was passed"):
-        PhonemeTransformRequest({}, ["sentence"], ["Pho"])
+        PhonemeTransformRequest(["sentence"], ["Pho"])
 
 
 def test_constructor_standard_case_1_1():
-    ptr = PhonemeTransformRequest({}, ["first sentence", "second sentence"])
+    ptr = PhonemeTransformRequest(["first sentence", "second sentence"])
 
     assert ptr.sentences[0][0] == "first"
     assert ptr.sentences[0][1] == "sentence"
@@ -41,7 +35,7 @@ def test_constructor_standard_case_1_1():
 
 
 def test_constructor_standard_case_1_2():
-    ptr = PhonemeTransformRequest({}, [["first", "sentence"], ["second", "sentence"]])
+    ptr = PhonemeTransformRequest([["first", "sentence"], ["second", "sentence"]])
 
     assert ptr.sentences[0][0] == "first"
     assert ptr.sentences[0][1] == "sentence"
@@ -50,26 +44,26 @@ def test_constructor_standard_case_1_2():
 
 
 def test_constructor_standard_case_1_edge():
-    ptr = PhonemeTransformRequest({}, sentences=[])
+    ptr = PhonemeTransformRequest(sentences=[])
 
     # ptr.sentences == []
     assert len(ptr.sentences) == 0
 
 
 def test_constructor_standard_case_2():
-    ptr = PhonemeTransformRequest({}, phonemes=["PHO1", "PHO2"])
+    ptr = PhonemeTransformRequest(phonemes=["PHO1", "PHO2"])
 
     assert ptr.phonemes[0][0][0][0] == "PHO1"
     assert ptr.phonemes[0][0][0][1] == "PHO2"
 
 
 def test_get_event_type_case_1_constructor():
-    ptr = PhonemeTransformRequest({}, sentences=["some sentence"])
+    ptr = PhonemeTransformRequest(sentences=["some sentence"])
 
     assert ptr.get_event_type() == EventType.SEND_SENTENCES_TO_MICROCONTROLLER
 
 
 def test_get_event_type_case_2_constructor():
-    ptr = PhonemeTransformRequest({}, phonemes=["PHO1"])
+    ptr = PhonemeTransformRequest(phonemes=["PHO1"])
 
     assert ptr.get_event_type() == EventType.SEND_PHONEMES_TO_MICROCONTROLLER

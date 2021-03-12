@@ -3,7 +3,7 @@ from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequ
 
 
 def test_handle_basic_case_1():
-    ptr = PhonemeTransformRequest({}, sentences=[["heat"]])
+    ptr = PhonemeTransformRequest(sentences=[["heat"]])
 
     ev = PhonemeDecompositionEvent()
 
@@ -15,7 +15,7 @@ def test_handle_basic_case_1():
 
 
 def test_handle_basic_case_2():
-    ptr = PhonemeTransformRequest({}, sentences=[["big", "heat"]])
+    ptr = PhonemeTransformRequest(sentences=[["big", "heat"]])
 
     ev = PhonemeDecompositionEvent()
 
@@ -26,7 +26,7 @@ def test_handle_basic_case_2():
 
 
 def test_handle_basic_case_3():
-    ptr = PhonemeTransformRequest({}, sentences=["sentence one"])
+    ptr = PhonemeTransformRequest(sentences=["sentence one"])
 
     ev = PhonemeDecompositionEvent()
 
@@ -38,7 +38,7 @@ def test_handle_basic_case_3():
 
 
 def test_handle_basic_case_4():
-    ptr = PhonemeTransformRequest({}, sentences=["sent", "again"])
+    ptr = PhonemeTransformRequest(sentences=["sent", "again"])
 
     ev = PhonemeDecompositionEvent()
 
@@ -49,7 +49,7 @@ def test_handle_basic_case_4():
 
 
 def test_handle_edge_case_1():
-    ptr = PhonemeTransformRequest({}, sentences=[])
+    ptr = PhonemeTransformRequest(sentences=[])
 
     ev = PhonemeDecompositionEvent()
 
@@ -59,7 +59,7 @@ def test_handle_edge_case_1():
 
 
 def test_handle_edge_case_2():
-    ptr = PhonemeTransformRequest({}, sentences=["as;liked"])
+    ptr = PhonemeTransformRequest(sentences=["as;liked"])
 
     ev = PhonemeDecompositionEvent()
 

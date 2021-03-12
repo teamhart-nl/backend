@@ -1,3 +1,5 @@
+from definitions import RESOURCES
+from src.helpers.LoadPhonemeJsonHelper import get_phoneme_patterns
 from src.models.EventTypeEnum import EventType
 from src.models.request_data.AbstractRequest import AbstractRequest
 
@@ -42,8 +44,7 @@ class PhonemeTransformRequest(AbstractRequest):
     # created by SendPhonemesToArduinoEvent
     sent_phonemes: List[List[str]]
 
-    def __init__(self, phoneme_patterns: Dict[str, Dict[str, Any]],
-                 sentences: Union[List[str], List[List[str]]] = None,
+    def __init__(self, sentences: Union[List[str], List[List[str]]] = None,
                  phonemes: List[str] = None):
         """
         Constructor to make object for sentence processing or phoneme processing. This constructor has 2 purposes:
@@ -53,7 +54,6 @@ class PhonemeTransformRequest(AbstractRequest):
 
         Function throws an error when both the sentences and phonemes parameter are filled.
 
-        @param phoneme_patterns     Dict[str, Dict[str, Any]] json patterns of phonemes
         @param sentences            Text to process, either (1) list of strings, or (2) list of list of strings in the
                                         following form
                                             (1) ["first sentence", "second sentence"]
@@ -62,14 +62,11 @@ class PhonemeTransformRequest(AbstractRequest):
                                         ["PHO1", "PHO2"]
         @raises ValueError          If both sentences and phonemes are filled with data or when phoneme_patterns is None
         """
-        if phoneme_patterns is None:
-            raise ValueError("PhonemeTransformRequest.__init__: phoneme_patterns cannot be None")
-
         if sentences is not None and phonemes is not None:
             raise ValueError("PhonemeTransformRequest.__init__: both sentences and phonemes parameter was passed")
 
         # set phoneme pattern
-        self.phoneme_patterns = phoneme_patterns
+        self.phoneme_patterns = get_phoneme_patterns(RESOURCES)
 
         if phonemes is not None:
             # Creation for purpose 2

@@ -1,10 +1,11 @@
 from flask import request, jsonify
 
-from definitions import API_BASE_URL
+from definitions import API_BASE_URL, RESOURCES
+from src.helpers.LoadPhonemeJsonHelper import get_phoneme_patterns
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
 from src.routes.RouteValidation import validate_json
 
-from app import app, dispatcher, phoneme_patterns
+from app import app, dispatcher
 
 
 # =============================================================================
@@ -19,7 +20,7 @@ def phonemes():
     """
 
     # all keys are available phonemes
-    available = list(phoneme_patterns.keys())
+    available = list(get_phoneme_patterns(RESOURCES).keys())
 
     # return json data and success code
     return jsonify({'phonemes': available}), 200
@@ -36,7 +37,7 @@ def send_phonemes():
     data = request.json
 
     # make the event request data
-    request_data = PhonemeTransformRequest(phoneme_patterns, phonemes=data['phonemes'])
+    request_data = PhonemeTransformRequest(phonemes=data['phonemes'])
 
     # send to dispatcher
     dispatcher.handle(request_data)
@@ -61,7 +62,7 @@ def send_words():
     data = request.json
 
     # issue event
-    sentence_request = PhonemeTransformRequest(phoneme_patterns, sentences=[data['words']])
+    sentence_request = PhonemeTransformRequest(sentences=[data['words']])
     dispatcher.handle(sentence_request)
 
     # create result json with all sent phonemes

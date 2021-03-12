@@ -13,7 +13,6 @@ app = Flask(__name__)
 CORS(app)
 
 dispatcher = None
-phoneme_patterns = None
 
 
 if os.environ.get("WERKZEUG_RUN_MAIN") or __name__ == "__main__":
@@ -23,8 +22,6 @@ if os.environ.get("WERKZEUG_RUN_MAIN") or __name__ == "__main__":
 
     # config singleton ArduinoConnection
     ArduinoConnection().connect_with_config(os.path.join(RESOURCES, 'arduino_config.json'))
-
-    phoneme_patterns = get_phoneme_patterns(RESOURCES)
 
     # Import routes
     import src.routes.Routes

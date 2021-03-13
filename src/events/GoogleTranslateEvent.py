@@ -35,14 +35,6 @@ class GoogleTranslateEvent(AbstractEvent):
         if not isinstance(request_data, TranslateRequest):
             raise ValueError("GoogleTranslateEvent.handle: request_data is of type " + str(type(request_data)) + ".")
 
-        # Define local string decode function
-        # def decode(sen: str) -> str:
-        #     if isinstance(sen, six.binary_type):
-        #         return sen.decode("utf-8")
-
-        # Decode sentences using map
-        # decoded_sentences = list(map(decode, request_data.original_sentences))
-
         # Define local translation decode function
         def translate_sentence(sen: str) -> TranslateTextResponse:
             return html.unescape(self.translate_client.translate_text(

@@ -3,7 +3,6 @@ from google.cloud.translate_v3 import TranslateTextResponse
 from src.events.AbstractEvent import AbstractEvent
 
 from google.cloud import translate
-import six
 import html
 
 from typing import List

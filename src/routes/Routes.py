@@ -87,11 +87,17 @@ def send_sentences():
 
     # issue translate event
     translate_request = TranslateRequest(original_sentences=data['sentences'], source_language=data['language'])
-    translate_request = dispatcher.handle(translate_request)
+    try:
+        translate_request = dispatcher.handle(translate_request)
+    except RuntimeError:
+        return "Could not handle TranslateRequest successfully", 500
 
     # Issue decomposition into phonemes and sending to microcontroller
     decomposition_request = PhonemeTransformRequest(sentences=translate_request.translated_sentences)
-    dispatcher.handle(decomposition_request)
+    try:
+        dispatcher.handle(decomposition_request)
+    except RuntimeError:
+        return "Could not handle PhonemeTransformRequest successfully", 500
 
     result = {
         "sentences": translate_request.original_sentences,

@@ -41,7 +41,10 @@ def send_phonemes():
     request_data = PhonemeTransformRequest(phonemes=data['phonemes'])
 
     # send to dispatcher
-    dispatcher.handle(request_data)
+    try:
+        dispatcher.handle(request_data)
+    except RuntimeError:
+        return "Could not handle PhonemeTransformRequest successfully", 500
 
     # empty body return, success code
     return "", 200
@@ -64,7 +67,10 @@ def send_words():
 
     # issue event
     sentence_request = PhonemeTransformRequest(sentences=[data['words']])
-    dispatcher.handle(sentence_request)
+    try:
+        dispatcher.handle(sentence_request)
+    except RuntimeError:
+        return "Could not handle PhonemeTransformRequest successfully", 500
 
     # create result json with all sent phonemes
     result = {"words": data['words'], "decomposition": []}

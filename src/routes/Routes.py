@@ -44,7 +44,7 @@ def send_phonemes():
     try:
         dispatcher.handle(request_data)
     except RuntimeError:
-        return "Could not handle PhonemeTransformRequest successfully", 500
+        return API_BASE_URL + "/microcontroller/phonemes: Could not handle PhonemeTransformRequest successfully", 500
 
     # empty body return, success code
     return "", 200
@@ -70,7 +70,7 @@ def send_words():
     try:
         dispatcher.handle(sentence_request)
     except RuntimeError:
-        return "Could not handle PhonemeTransformRequest successfully", 500
+        return API_BASE_URL + "/microcontroller/words: Could not handle PhonemeTransformRequest successfully", 500
 
     # create result json with all sent phonemes
     result = {"words": data['words'], "decomposition": []}
@@ -96,14 +96,14 @@ def send_sentences():
     try:
         translate_request = dispatcher.handle(translate_request)
     except RuntimeError:
-        return "Could not handle TranslateRequest successfully", 500
+        return API_BASE_URL + "/microcontroller/sentences: Could not handle TranslateRequest successfully", 500
 
     # Issue decomposition into phonemes and sending to microcontroller
     decomposition_request = PhonemeTransformRequest(sentences=translate_request.translated_sentences)
     try:
         dispatcher.handle(decomposition_request)
     except RuntimeError:
-        return "Could not handle PhonemeTransformRequest successfully", 500
+        return API_BASE_URL + "/microcontroller/sentences: Could not handle PhonemeTransformRequest successfully", 500
 
     result = {
         "sentences": translate_request.original_sentences,

@@ -4,6 +4,7 @@ from src.events.AbstractEvent import AbstractEvent
 
 from google.cloud import translate
 import six
+import html
 
 from typing import List
 
@@ -44,14 +45,19 @@ class GoogleTranslateEvent(AbstractEvent):
 
         # Define local translation decode function
         def translate_sentence(sen: str) -> TranslateTextResponse:
-            return self.translate_client.translate_text(
+            return html.unescape(self.translate_client.translate_text(
                 contents=[sen],
                 parent="projects/solid-century-301518/locations/global",
                 source_language_code=request_data.source_language,
-                target_language_code=request_data.target_language).translations[0].translated_text
+                target_language_code=request_data.target_language).translations[0].translated_text)
 
-        # Translate each of the sentences in the request data
-        request_data.translated_sentences = list(map(translate_sentence, request_data.original_sentences))
+        if request_data.source_language == request_data.target_language:
+            request_data.translated_sentences = request_data.original_sentences
+            Logger.log_info("Sentences were not translated as source and target language were equal.")
+        else:
+            # Translate each of the sentences in the request data
+            Logger.log_info("Translating '" + str(request_data.original_sentences) + "' to " + request_data.target_language)
+            request_data.translated_sentences = list(map(translate_sentence, request_data.original_sentences))
 
         # Log information
         Logger.log_info("GoogleTranslateEvent.handle: Completed GoogleTranslateEvent with translated sentences:")

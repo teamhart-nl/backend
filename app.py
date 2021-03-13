@@ -16,8 +16,8 @@ dispatcher = None
 
 
 if os.environ.get("WERKZEUG_RUN_MAIN") or __name__ == "__main__":
-    # Runtime configuration
 
+    # Initialize dispatcher
     dispatcher = Dispatcher()
 
     # config singleton ArduinoConnection

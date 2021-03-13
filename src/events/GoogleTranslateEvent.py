@@ -36,18 +36,23 @@ class GoogleTranslateEvent(AbstractEvent):
 
         # Define local translation decode function
         def translate_sentence(sen: str) -> TranslateTextResponse:
-            return html.unescape(self.translate_client.translate_text(
-                contents=[sen],
-                parent="projects/solid-century-301518/locations/global",
-                source_language_code=request_data.source_language,
-                target_language_code=request_data.target_language).translations[0].translated_text)
+            return html.unescape(
+                self.translate_client.translate_text(
+                    contents=[sen],  # sentence(s) to be translated
+                    parent="projects/solid-century-301518/locations/global",  # Name of project in google cloud
+                    source_language_code=request_data.source_language,  # Source language
+                    target_language_code=request_data.target_language  # Target language
+                ).translations[0].translated_text
+            )
 
         if request_data.source_language == request_data.target_language:
+            # If source language is equal to target language, then no translation needs to happen.
             request_data.translated_sentences = request_data.original_sentences
             Logger.log_info("Sentences were not translated as source and target language were equal.")
         else:
             # Translate each of the sentences in the request data
-            Logger.log_info("Translating '" + str(request_data.original_sentences) + "' to " + request_data.target_language)
+            Logger.log_info(
+                "Translating '" + str(request_data.original_sentences) + "' to " + request_data.target_language)
             request_data.translated_sentences = list(map(translate_sentence, request_data.original_sentences))
 
         # Log information

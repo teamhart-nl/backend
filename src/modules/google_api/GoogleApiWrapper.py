@@ -33,8 +33,7 @@ class GoogleApiWrapper(metaclass=Singleton):
             return
         else:
             Logger.log_info("GoogleApiWrapper.checkGoogleApiConnection: Currently, "
-                            "the path to your credentials file is set to: " +
-                            os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'))
+                            "the path to your credentials file is set to: " + cred)
 
         try:
             # If you don't specify credentials when constructing the client, the

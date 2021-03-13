@@ -42,8 +42,7 @@ class PhonemeDecompositionEvent(AbstractEvent):
                 try:
                     # Try to transform the word into phonemes using the Arpabet and add it to the list
                     arpabet_return = arpabet[str(word).lower()]
-                    Logger.log_info("Sentence was decomposed to following (CMU) phonemes")
-                    Logger.log_info(arpabet_return)
+                    Logger.log_info("'" + str(word) + "' was decomposed to (CMU) phonemes " + str(arpabet_return))
 
                     # all the valid decompositions (consisting of CMU phonemes coupled to Reeds)
                     valid_decompositions = []

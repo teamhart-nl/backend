@@ -71,9 +71,9 @@ class Dispatcher(metaclass=Singleton):
                 data = event().handle(data)
             except Exception as e:
                 # Catch and report exception
-                Logger.log_warning("FATAL ERROR! Stopping event execution")
-                Logger.log_warning("Dispatcher.handle: Stopped event was of type " + type(event).__name__)
-                Logger.log_warning("Complete error: " + str(e))
+                Logger.log_error("FATAL ERROR! Stopping event execution")
+                Logger.log_error("Dispatcher.handle: Stopped event was of type " + type(event).__name__)
+                Logger.log_error("Complete error: " + str(e))
                 raise RuntimeError("Event chain " + data.get_event_type().name + " could not be successfully complete.")
 
         return data

@@ -9,6 +9,10 @@ from src.helpers.Logger import Logger
 from src.modules.ArduinoConnection import ArduinoConnection
 from src.modules.google_api.GoogleApiWrapper import GoogleApiWrapper
 
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 app = Flask(__name__)
 CORS(app)
 

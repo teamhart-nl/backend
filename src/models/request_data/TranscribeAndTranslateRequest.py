@@ -11,9 +11,6 @@ class TranscribeAndTranslateRequest(AbstractRequest):
     Request type for a transformation that includes a transcription from an Audio file to sentences
     """
 
-    # Path to audio file
-    path: str
-
     # audio file
     audio_file: BinaryIO
 

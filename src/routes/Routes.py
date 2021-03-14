@@ -1,6 +1,7 @@
 from flask import request, jsonify
 
 from definitions import API_BASE_URL, RESOURCES
+from src.helpers.Logger import Logger
 from src.helpers.LoadPhonemeJsonHelper import get_phoneme_patterns
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
 from src.models.request_data.TranslateRequest import TranslateRequest
@@ -8,8 +9,8 @@ from src.models.request_data.TranscribeAndTranslateRequest import TranscribeAndT
 from src.routes.RouteValidation import validate_json
 
 from werkzeug.utils import secure_filename
-import os
 import io
+import json
 
 from app import app, dispatcher
 
@@ -122,7 +123,7 @@ def send_sentences():
 @validate_json
 def send_audiopath():
     """
-    POST send sentence(s) to the microcontroller
+    POST send audiopath of audio to be transcribed, translated and sent to the microcontroller
     """
 
     # get body from api
@@ -157,37 +158,46 @@ def send_audiopath():
     # send return, success code
     return jsonify(result), 200
 
-
 @app.route("/microcontroller/audiofile", methods=["POST"])
-def upload_file():
-    # check if the post request has the file part
-    if 'file' not in request.files:
-        return "", 400
+def send_audiofile():
+    """
+    POST send audiofile of audio to be transcribed, translated and sent to the microcontroller
+    """
 
+    # check if the post request has the audiofile
+    if 'file' not in request.files:
+        return "No audiofile added", 400
+
+    # check if the post request has the parameters
+    if 'data' not in request.files:
+        return "No data file added", 400
+
+    # get file from the request multiform
+    # type is regular python file object with a light wrapper, which we can ignore
     file = request.files['file']
-    # if user does not select file, browser also
-    # submit an empty part without filename
-    # if file:
-    #     filename = os.path.join(RESOURCES, secure_filename(file.filename))
-    #     file.save(filename)
+
+    # get the parameters as json file from the multipart form
+    data = json.load(request.files['data'])
 
     # issue translate event
     transcribe_translate_request = TranscribeAndTranslateRequest(
         file,
-        source_language='nl',
-        target_language='en')
+        source_language=data['source_language'],
+        target_language=data['target_language'])
     try:
         dispatcher.handle(transcribe_translate_request)
     except RuntimeError:
         return API_BASE_URL + "/microcontroller/audiofile: Could not handle TranslateRequest successfully", 500
 
     # Issue decomposition into phonemes and sending to microcontroller
-    decomposition_request = PhonemeTransformRequest(sentences=transcribe_translate_request.translated_sentences)
+    decomposition_request = PhonemeTransformRequest(
+        sentences=transcribe_translate_request.translated_sentences)
     try:
         dispatcher.handle(decomposition_request)
     except RuntimeError:
         return API_BASE_URL + "/microcontroller/audiofile: Could not handle PhonemeTransformRequest successfully", 500
 
+    # format result
     result = {
         "transcription": transcribe_translate_request.original_sentences,
         "translation": transcribe_translate_request.translated_sentences,

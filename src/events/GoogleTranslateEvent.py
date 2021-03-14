@@ -35,7 +35,7 @@ class GoogleTranslateEvent(AbstractEvent):
             raise ValueError("GoogleTranslateEvent.handle: request_data is of type " + str(type(request_data)) + ".")
 
         # Define local translation decode function
-        def translate_sentence(sen: str) -> TranslateTextResponse:
+        def translate_sentence(sen: str) -> str:
             return html.unescape(
                 self.translate_client.translate_text(
                     contents=[sen],  # sentence(s) to be translated

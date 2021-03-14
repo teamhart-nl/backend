@@ -7,6 +7,9 @@ from src.models.request_data.TranslateRequest import TranslateRequest
 from src.models.request_data.TranscribeAndTranslateRequest import TranscribeAndTranslateRequest
 from src.routes.RouteValidation import validate_json
 
+from werkzeug.utils import secure_filename
+import os
+
 from app import app, dispatcher
 
 
@@ -132,14 +135,53 @@ def send_audiopath():
     try:
         dispatcher.handle(transcribe_translate_request)
     except RuntimeError:
-        return API_BASE_URL + "/microcontroller/sentences: Could not handle TranslateRequest successfully", 500
+        return API_BASE_URL + "/microcontroller/audiopath: Could not handle TranslateRequest successfully", 500
 
     # Issue decomposition into phonemes and sending to microcontroller
     decomposition_request = PhonemeTransformRequest(sentences=transcribe_translate_request.translated_sentences)
     try:
         dispatcher.handle(decomposition_request)
     except RuntimeError:
-        return API_BASE_URL + "/microcontroller/sentences: Could not handle PhonemeTransformRequest successfully", 500
+        return API_BASE_URL + "/microcontroller/audiopath: Could not handle PhonemeTransformRequest successfully", 500
+
+    result = {
+        "transcription": transcribe_translate_request.original_sentences,
+        "translation": transcribe_translate_request.translated_sentences,
+    }
+
+    # send return, success code
+    return jsonify(result), 200
+
+
+@app.route("/microcontroller/audiofile", methods=["POST"])
+def upload_file():
+    # check if the post request has the file part
+    if 'file' not in request.files:
+        return "", 400
+
+    file = request.files['file']
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    if file:
+        filename = os.path.join(RESOURCES, secure_filename(file.filename))
+        file.save(filename)
+
+    # issue translate event
+    transcribe_translate_request = TranscribeAndTranslateRequest(
+        filename,
+        source_language='nl',
+        target_language='en')
+    try:
+        dispatcher.handle(transcribe_translate_request)
+    except RuntimeError:
+        return API_BASE_URL + "/microcontroller/audiofile: Could not handle TranslateRequest successfully", 500
+
+    # Issue decomposition into phonemes and sending to microcontroller
+    decomposition_request = PhonemeTransformRequest(sentences=transcribe_translate_request.translated_sentences)
+    try:
+        dispatcher.handle(decomposition_request)
+    except RuntimeError:
+        return API_BASE_URL + "/microcontroller/audiofile: Could not handle PhonemeTransformRequest successfully", 500
 
     result = {
         "transcription": transcribe_translate_request.original_sentences,

@@ -4,6 +4,7 @@ from definitions import API_BASE_URL, RESOURCES
 from src.helpers.LoadPhonemeJsonHelper import get_phoneme_patterns
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
 from src.models.request_data.TranslateRequest import TranslateRequest
+from src.models.request_data.TranscribeAndTranslateRequest import TranscribeAndTranslateRequest
 from src.routes.RouteValidation import validate_json
 
 from app import app, dispatcher
@@ -108,6 +109,41 @@ def send_sentences():
     result = {
         "sentences": translate_request.original_sentences,
         "translation": translate_request.translated_sentences,
+    }
+
+    # send return, success code
+    return jsonify(result), 200
+
+@app.route(API_BASE_URL + "/microcontroller/audiopath", methods=['POST'])
+@validate_json
+def send_audiopath():
+    """
+    POST send sentence(s) to the microcontroller
+    """
+
+    # get body from api
+    data = request.json
+
+    # issue translate event
+    transcribe_translate_request = TranscribeAndTranslateRequest(
+        data['path'],
+        source_language=data['source_language'],
+        target_language=data['target_language'])
+    try:
+        dispatcher.handle(transcribe_translate_request)
+    except RuntimeError:
+        return API_BASE_URL + "/microcontroller/sentences: Could not handle TranslateRequest successfully", 500
+
+    # Issue decomposition into phonemes and sending to microcontroller
+    decomposition_request = PhonemeTransformRequest(sentences=transcribe_translate_request.translated_sentences)
+    try:
+        dispatcher.handle(decomposition_request)
+    except RuntimeError:
+        return API_BASE_URL + "/microcontroller/sentences: Could not handle PhonemeTransformRequest successfully", 500
+
+    result = {
+        "transcription": transcribe_translate_request.original_sentences,
+        "translation": transcribe_translate_request.translated_sentences,
     }
 
     # send return, success code

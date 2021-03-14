@@ -160,6 +160,38 @@ RESULT:
 
 </details>
 
+<details>
+<summary>/microcontroller/audiopath</summary>
+
+Send an audiopath of a file, returns the phoneme breakdown.
+
+REQUEST:
+
+    POST /api/v1/microcontroller/audiopath
+
+BODY
+
+    {
+        'path': 'C:\Users\user\Documents\file.flac'
+        'source_language' : 'nl'
+        'target_language' : 'en'
+    }
+
+
+RESULT:
+
+    {
+        "transcription" : ["This is sentence one", "This is sentence two"],
+        "translation" : ["Translation of sentence one", "Translation of sentence two"]
+    }, 
+    200 if OK
+
+EXAMPLE CURL (windows)
+
+    curl -H "Content-Type: application/json" -d "{ \"path\": \"C:\\Users\\20181884\\Documents\\HART\\backend\\sound1channel.flac\", \"source_language\": \"nl\", \"target_language\": \"en\" }" http://localhost:5000/api/v1/microcontroller/audiopath
+
+</details>
+
 # Events
 
 ## Overview of Events

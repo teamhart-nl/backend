@@ -32,13 +32,13 @@ class TranscribeAndTranslateRequest(AbstractRequest):
     # The original language code of the sentences
     source_language: str
 
-    def __init__(self, path_to_local_audio_file: str, spoken_language: str, target_language: str = 'en'):
+    def __init__(self, path_to_local_audio_file: str, source_language: str, target_language: str = 'en'):
         if not path_to_local_audio_file or path_to_local_audio_file == "":
             raise ValueError("TranscribeRequest.__init__: path variable is " + path_to_local_audio_file)
 
         self.path = path_to_local_audio_file
 
-        self.source_language = spoken_language
+        self.source_language = source_language
         self.target_language = target_language
 
         self.original_sentences = []

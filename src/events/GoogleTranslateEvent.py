@@ -1,7 +1,7 @@
 from src.events.AbstractEvent import AbstractEvent
 
-from google.cloud import translate_v3 as translate
-import six
+from google.cloud import translate
+import html
 
 from typing import List
 
@@ -20,7 +20,7 @@ class GoogleTranslateEvent(AbstractEvent):
     PRIORITY: int = 190
 
     def __init__(self):
-        self.translate_client = translate.Client()
+        self.translate_client = translate.TranslationServiceClient()
 
     def handle(self, request_data: AbstractRequest):
         # Check if the Google API wrapper is authenticated
@@ -32,20 +32,26 @@ class GoogleTranslateEvent(AbstractEvent):
         if not isinstance(request_data, TranslateRequest):
             raise ValueError("GoogleTranslateEvent.handle: request_data is of type " + str(type(request_data)) + ".")
 
-        # Define local string decode function
-        def decode(sen: str) -> str:
-            if isinstance(sen, six.binary_type):
-                return sen.decode("utf-8")
-
-        # Decode sentences using map
-        decoded_sentences = map(decode, request_data.original_sentences)
-
         # Define local translation decode function
         def translate_sentence(sen: str) -> str:
-            return self.translate_client.translate(sen, request_data.source_language, request_data.target_language)
+            return html.unescape(
+                self.translate_client.translate_text(
+                    contents=[sen],  # sentence(s) to be translated
+                    parent="projects/solid-century-301518/locations/global",  # Name of project in google cloud
+                    source_language_code=request_data.source_language,  # Source language
+                    target_language_code=request_data.target_language  # Target language
+                ).translations[0].translated_text
+            )
 
-        # Translate each of the sentences in the request data
-        request_data.translated_sentences = map(translate_sentence, decoded_sentences)
+        if request_data.source_language == request_data.target_language:
+            # If source language is equal to target language, then no translation needs to happen.
+            request_data.translated_sentences = request_data.original_sentences
+            Logger.log_info("Sentences were not translated as source and target language were equal.")
+        else:
+            # Translate each of the sentences in the request data
+            Logger.log_info(
+                "Translating '" + str(request_data.original_sentences) + "' to " + request_data.target_language)
+            request_data.translated_sentences = list(map(translate_sentence, request_data.original_sentences))
 
         # Log information
         Logger.log_info("GoogleTranslateEvent.handle: Completed GoogleTranslateEvent with translated sentences:")

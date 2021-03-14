@@ -1,10 +1,12 @@
 from flask import request, jsonify
 
-from definitions import API_BASE_URL
+from definitions import API_BASE_URL, RESOURCES
+from src.helpers.LoadPhonemeJsonHelper import get_phoneme_patterns
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
+from src.models.request_data.TranslateRequest import TranslateRequest
 from src.routes.RouteValidation import validate_json
 
-from app import app, dispatcher, phoneme_patterns
+from app import app, dispatcher
 
 
 # =============================================================================
@@ -19,7 +21,7 @@ def phonemes():
     """
 
     # all keys are available phonemes
-    available = list(phoneme_patterns.keys())
+    available = list(get_phoneme_patterns(RESOURCES).keys())
 
     # return json data and success code
     return jsonify({'phonemes': available}), 200
@@ -36,10 +38,13 @@ def send_phonemes():
     data = request.json
 
     # make the event request data
-    request_data = PhonemeTransformRequest(phoneme_patterns, phonemes=data['phonemes'])
+    request_data = PhonemeTransformRequest(phonemes=data['phonemes'])
 
     # send to dispatcher
-    dispatcher.handle(request_data)
+    try:
+        dispatcher.handle(request_data)
+    except RuntimeError:
+        return API_BASE_URL + "/microcontroller/phonemes: Could not handle PhonemeTransformRequest successfully", 500
 
     # empty body return, success code
     return "", 200
@@ -61,8 +66,11 @@ def send_words():
     data = request.json
 
     # issue event
-    sentence_request = PhonemeTransformRequest(phoneme_patterns, sentences=[data['words']])
-    dispatcher.handle(sentence_request)
+    sentence_request = PhonemeTransformRequest(sentences=[data['words']])
+    try:
+        dispatcher.handle(sentence_request)
+    except RuntimeError:
+        return API_BASE_URL + "/microcontroller/words: Could not handle PhonemeTransformRequest successfully", 500
 
     # create result json with all sent phonemes
     result = {"words": data['words'], "decomposition": []}
@@ -72,3 +80,35 @@ def send_words():
     # send return, success code
     return jsonify(result), 200
 
+
+@app.route(API_BASE_URL + "/microcontroller/sentences", methods=['POST'])
+@validate_json
+def send_sentences():
+    """
+    POST send sentence(s) to the microcontroller
+    """
+
+    # get body from api
+    data = request.json
+
+    # issue translate event
+    translate_request = TranslateRequest(original_sentences=data['sentences'], source_language=data['language'])
+    try:
+        translate_request = dispatcher.handle(translate_request)
+    except RuntimeError:
+        return API_BASE_URL + "/microcontroller/sentences: Could not handle TranslateRequest successfully", 500
+
+    # Issue decomposition into phonemes and sending to microcontroller
+    decomposition_request = PhonemeTransformRequest(sentences=translate_request.translated_sentences)
+    try:
+        dispatcher.handle(decomposition_request)
+    except RuntimeError:
+        return API_BASE_URL + "/microcontroller/sentences: Could not handle PhonemeTransformRequest successfully", 500
+
+    result = {
+        "sentences": translate_request.original_sentences,
+        "translation": translate_request.translated_sentences,
+    }
+
+    # send return, success code
+    return jsonify(result), 200

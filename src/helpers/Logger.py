@@ -1,3 +1,7 @@
+import coloredlogs, logging
+coloredlogs.install()
+
+
 class Logger:
     """
     Logger can be used to log data in a standardized fashion
@@ -5,8 +9,12 @@ class Logger:
 
     @staticmethod
     def log_info(text) -> None:
-        print(f"=== LOGGER OUTPUT ===== INFO: {text}")
+        logging.info(text)
 
     @staticmethod
     def log_warning(text) -> None:
-        print(f"=== LOGGER OUTPUT ===== WARNING: {text} ===")
+        logging.warning(text)
+
+    @staticmethod
+    def log_error(text) -> None:
+        logging.error(text)

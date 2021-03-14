@@ -131,6 +131,35 @@ RESULT:
 
 </details>
 
+<details>
+<summary>/microcontroller/sentences</summary>
+
+Send a list of sentences to the arduino, returns the phoneme breakdown.
+
+REQUEST:
+
+    POST /api/v1/microcontroller/sentences
+
+BODY
+
+    {'sentences': ['This is sentence one.', 'This is sentence two.'], 'language': 'language abbreviated string'}
+The 'language abbreviated string' can be either
+1. 'en' for English
+2. 'nl' for Dutch
+3. 'de' for German
+4. 'fr' for French
+5. 'ru' for Russian
+
+RESULT:
+
+    {
+        "sentences" : ["This is sentence one", "This is sentence two"],
+        "translation" : ["Translation of sentence one", "Translation of sentence two"]
+    }, 
+    200 if OK
+
+</details>
+
 # Events
 
 ## Overview of Events

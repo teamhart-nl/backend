@@ -5,26 +5,30 @@ from flask_cors import CORS
 
 from definitions import PRODUCTION, RESOURCES
 from src.handlers.Dispatcher import Dispatcher
-from src.helpers.LoadPhonemeJsonHelper import get_phoneme_patterns
 from src.helpers.Logger import Logger
 from src.modules.ArduinoConnection import ArduinoConnection
+from src.modules.google_api.GoogleApiWrapper import GoogleApiWrapper
+
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 app = Flask(__name__)
 CORS(app)
 
 dispatcher = None
-phoneme_patterns = None
 
 
 if os.environ.get("WERKZEUG_RUN_MAIN") or __name__ == "__main__":
-    # Runtime configuration
 
+    # Initialize dispatcher
     dispatcher = Dispatcher()
 
     # config singleton ArduinoConnection
     ArduinoConnection().connect_with_config(os.path.join(RESOURCES, 'arduino_config.json'))
 
-    phoneme_patterns = get_phoneme_patterns(RESOURCES)
+    # Check if google api is working correctly
+    GoogleApiWrapper(credentials_path=os.path.join(RESOURCES, 'gcloud_credentials.json'))
 
     # Import routes
     import src.routes.Routes

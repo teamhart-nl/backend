@@ -134,7 +134,7 @@ RESULT:
 <details>
 <summary>/microcontroller/sentences</summary>
 
-Send a list of sentences to the arduino, returns the phoneme breakdown.
+Send a list of sentences to the arduino, returns the translation and fires microcontroller.
 
 REQUEST:
 
@@ -163,7 +163,7 @@ RESULT:
 <details>
 <summary>/microcontroller/audiopath</summary>
 
-Send an audiopath of a file, returns the phoneme breakdown.
+Send an audiopath of a file, fires microcontroller, and return transcription and translation.
 
 REQUEST:
 
@@ -177,6 +177,9 @@ BODY
         'target_language' : 'en'
     }
 
+EXAMPLE CURL (windows)
+
+    curl -H "Content-Type: application/json" -d "{ \"path\": \"C:\\Projects\\tryout\\sound1channel.flac\", \"source_language\": \"nl\", \"target_language\": \"en\" }" http://localhost:5000/api/v1/microcontroller/audiopath
 
 RESULT:
 
@@ -186,9 +189,43 @@ RESULT:
     }, 
     200 if OK
 
-EXAMPLE CURL (windows)
+</details>
 
-    curl -H "Content-Type: application/json" -d "{ \"path\": \"C:\\Projects\\tryout\\sound1channel.flac\", \"source_language\": \"nl\", \"target_language\": \"en\" }" http://localhost:5000/api/v1/microcontroller/audiopath
+<details>
+<summary>/microcontroller/audiofile</summary>
+
+Send an audiofile,fires microcontroller, and return transcription and translation. This request is a bit different, as it is not a json post, but a multipart form. This multipart form contains two fields, one which is the audiofile in bytes, the second one which is the parameters in a json dumped to string. See the curl / body.
+
+REQUEST:
+
+    POST /api/v1/microcontroller/audiofile
+
+BODY
+
+    <form action="/microcontroller/audiofile" method="post" enctype="multipart/form-data">
+    File: <input type="file" name="file"><br>
+    Data: <input type="text" name="data"><br>
+    <input type="submit" value="Submit">
+    </form>
+
+EXAMPLE PYTHON REQUEST (cus curl would be a bitch for this one)
+
+    file = open(FILE_PATH, "rb")
+	data = {"source_language": "nl", "target_language": "en"}
+    # package stuff to send and perform POST request
+	values = {"file": (FILE_PATH, file, "audio/flac"),
+			"data" : ('data', json.dumps(data), 'application/json')}
+	
+	response = requests.post(URL, files=values)
+
+RESULT:
+
+    {
+        "transcription" : ["This is sentence one", "This is sentence two"],
+        "translation" : ["Translation of sentence one", "Translation of sentence two"]
+    }, 
+    200 if OK
+
 
 </details>
 

@@ -158,11 +158,13 @@ def send_audiopath():
     # send return, success code
     return jsonify(result), 200
 
-@app.route("/microcontroller/audiofile", methods=["POST"])
+@app.route(API_BASE_URL + "/microcontroller/audiofile", methods=["POST"])
 def send_audiofile():
     """
     POST send audiofile of audio to be transcribed, translated and sent to the microcontroller
     """
+
+    print(request.files)
 
     # check if the post request has the audiofile
     if 'file' not in request.files:

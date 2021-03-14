@@ -28,7 +28,7 @@ if os.environ.get("WERKZEUG_RUN_MAIN") or __name__ == "__main__":
     ArduinoConnection().connect_with_config(os.path.join(RESOURCES, 'arduino_config.json'))
 
     # Check if google api is working correctly
-    GoogleApiWrapper()
+    GoogleApiWrapper(credentials_path=os.path.join(RESOURCES, 'gcloud_credentials.json'))
 
     # Import routes
     import src.routes.Routes

@@ -41,7 +41,6 @@ class GoogleTranscribeEvent(AbstractEvent):
 
         # Set audio configuration
         config = speech.RecognitionConfig(
-            request_data.audio_type,
             language_code=request_data.spoken_language
         )
 
@@ -50,7 +49,9 @@ class GoogleTranscribeEvent(AbstractEvent):
 
         # Each result is for a consecutive portion of the audio. Iterate through
         # them to get the transcripts for the entire audio file.
-        request_data.sentences = response.results
+        request_data.sentences = []
+        for sentence in response.results:
+            request_data.sentences.append(sentence.alternatives[0].transcript)
 
     @staticmethod
     def get_priority() -> int:

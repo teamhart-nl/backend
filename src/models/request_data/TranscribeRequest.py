@@ -3,6 +3,8 @@ from src.models.request_data.AbstractRequest import AbstractRequest
 
 from google.cloud import speech
 
+from typing import List
+
 
 class TranscribeRequest(AbstractRequest):
     """
@@ -19,7 +21,7 @@ class TranscribeRequest(AbstractRequest):
     spoken_language: str
 
     # Transcription
-    sentences: [str]
+    sentences: List[str]
 
     def __init__(self, path_to_local_audio_file: str, spoken_language: str):
         if not path_to_local_audio_file or path_to_local_audio_file == "":

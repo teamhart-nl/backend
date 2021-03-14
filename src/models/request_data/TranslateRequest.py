@@ -1,6 +1,7 @@
 from src.models.EventTypeEnum import EventType
 from src.models.request_data.AbstractRequest import AbstractRequest
 
+from typing import List
 
 class TranslateRequest(AbstractRequest):
     """
@@ -8,10 +9,10 @@ class TranslateRequest(AbstractRequest):
     """
 
     # Sentences to be translated
-    original_sentences: [str]
+    original_sentences: List[str]
 
     # Stores the translated sentences after translation
-    translated_sentences: [str]
+    translated_sentences: List[str]
 
     # The original language code of the sentences
     source_language: str

@@ -28,10 +28,6 @@ class GoogleTranscribeEvent(AbstractEvent):
             raise AssertionError("GoogleTranscribeEvent.handle: make sure to authenticate with the Google API by "
                                  "setting your credentials correctly.")
 
-        # Check if the request_data is of type TranscribeRequest
-        if not isinstance(request_data, TranscribeRequest):
-            raise ValueError("GoogleTranscribeEvent.handle: request_data is of type " + str(type(request_data)) + ".")
-
         # Open the audio file
         with io.open(request_data.path, "rb") as audio_file:
             content = audio_file.read()
@@ -41,7 +37,7 @@ class GoogleTranscribeEvent(AbstractEvent):
 
         # Set audio configuration
         config = speech.RecognitionConfig(
-            language_code=request_data.spoken_language
+            language_code=request_data.source_language
         )
 
         # Get Google API response
@@ -49,9 +45,11 @@ class GoogleTranscribeEvent(AbstractEvent):
 
         # Each result is for a consecutive portion of the audio. Iterate through
         # them to get the transcripts for the entire audio file.
-        request_data.sentences = []
+        request_data.original_sentences = []
         for sentence in response.results:
-            request_data.sentences.append(sentence.alternatives[0].transcript)
+            request_data.original_sentences.append(sentence.alternatives[0].transcript)
+
+        return request_data
 
     @staticmethod
     def get_priority() -> int:
@@ -61,4 +59,5 @@ class GoogleTranscribeEvent(AbstractEvent):
     def get_compatible_events() -> List[EventType]:
         return [
             EventType.TRANSCRIBE_USING_GOOGLE_API,
-            EventType.COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION ]
+            EventType.TRANSCRIBE_AND_TRANSLATE_USING_GOOGLE_API,
+            EventType.COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION]

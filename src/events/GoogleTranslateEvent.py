@@ -28,10 +28,6 @@ class GoogleTranslateEvent(AbstractEvent):
             raise AssertionError("GoogleTranslateEvent.handle: make sure to authenticate with the Google API by "
                                  "setting your credentials correctly.")
 
-        # Check if the request_data is of type TranslateRequest
-        if not isinstance(request_data, TranslateRequest):
-            raise ValueError("GoogleTranslateEvent.handle: request_data is of type " + str(type(request_data)) + ".")
-
         # Define local translation decode function
         def translate_sentence(sen: str) -> str:
             return html.unescape(
@@ -68,5 +64,6 @@ class GoogleTranslateEvent(AbstractEvent):
     def get_compatible_events() -> List[EventType]:
         return [
             EventType.TRANSLATE_USING_GOOGLE_API,
+            EventType.TRANSCRIBE_AND_TRANSLATE_USING_GOOGLE_API,
             EventType.COMPLETE_GOOGLE_API_PHONEME_TRANSFORMATION
         ]

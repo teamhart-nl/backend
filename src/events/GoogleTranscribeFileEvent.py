@@ -28,9 +28,8 @@ class GoogleTranscribeEvent(AbstractEvent):
             raise AssertionError("GoogleTranscribeEvent.handle: make sure to authenticate with the Google API by "
                                  "setting your credentials correctly.")
 
-        # Open the audio file
-        with io.open(request_data.path, "rb") as audio_file:
-            content = audio_file.read()
+        # read the audio file
+        content = request_data.audio_file.read()
 
         # Get audio content
         audio = speech.RecognitionAudio(content=content)

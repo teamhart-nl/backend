@@ -188,7 +188,7 @@ RESULT:
 
 EXAMPLE CURL (windows)
 
-    curl -H "Content-Type: application/json" -d "{ \"path\": \"C:\\Users\\20181884\\Documents\\HART\\backend\\sound1channel.flac\", \"source_language\": \"nl\", \"target_language\": \"en\" }" http://localhost:5000/api/v1/microcontroller/audiopath
+    curl -H "Content-Type: application/json" -d "{ \"path\": \"C:\\Projects\\tryout\\sound1channel.flac\", \"source_language\": \"nl\", \"target_language\": \"en\" }" http://localhost:5000/api/v1/microcontroller/audiopath
 
 </details>
 

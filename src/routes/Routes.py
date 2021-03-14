@@ -9,6 +9,7 @@ from src.routes.RouteValidation import validate_json
 
 from werkzeug.utils import secure_filename
 import os
+import io
 
 from app import app, dispatcher
 
@@ -127,15 +128,19 @@ def send_audiopath():
     # get body from api
     data = request.json
 
+    audio_file = io.open(data['path'], "rb")
+
     # issue translate event
     transcribe_translate_request = TranscribeAndTranslateRequest(
-        data['path'],
+        audio_file,
         source_language=data['source_language'],
         target_language=data['target_language'])
     try:
         dispatcher.handle(transcribe_translate_request)
     except RuntimeError:
         return API_BASE_URL + "/microcontroller/audiopath: Could not handle TranslateRequest successfully", 500
+
+    audio_file.close()
 
     # Issue decomposition into phonemes and sending to microcontroller
     decomposition_request = PhonemeTransformRequest(sentences=transcribe_translate_request.translated_sentences)
@@ -162,13 +167,13 @@ def upload_file():
     file = request.files['file']
     # if user does not select file, browser also
     # submit an empty part without filename
-    if file:
-        filename = os.path.join(RESOURCES, secure_filename(file.filename))
-        file.save(filename)
+    # if file:
+    #     filename = os.path.join(RESOURCES, secure_filename(file.filename))
+    #     file.save(filename)
 
     # issue translate event
     transcribe_translate_request = TranscribeAndTranslateRequest(
-        filename,
+        file,
         source_language='nl',
         target_language='en')
     try:

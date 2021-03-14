@@ -3,7 +3,7 @@ from src.models.request_data.AbstractRequest import AbstractRequest
 
 from google.cloud import speech
 
-from typing import List
+from typing import List, BinaryIO
 
 
 class TranscribeAndTranslateRequest(AbstractRequest):
@@ -13,6 +13,9 @@ class TranscribeAndTranslateRequest(AbstractRequest):
 
     # Path to audio file
     path: str
+
+    # audio file
+    audio_file: BinaryIO
 
     # Type of audio file
     audio_type: any
@@ -32,11 +35,11 @@ class TranscribeAndTranslateRequest(AbstractRequest):
     # The original language code of the sentences
     source_language: str
 
-    def __init__(self, path_to_local_audio_file: str, source_language: str, target_language: str = 'en'):
-        if not path_to_local_audio_file or path_to_local_audio_file == "":
-            raise ValueError("TranscribeRequest.__init__: path variable is " + path_to_local_audio_file)
+    def __init__(self, audio_file: BinaryIO, source_language: str, target_language: str = 'en'):
+        if not audio_file:
+            raise ValueError("TranscribeRequest.__init__: no audio file is passed")
 
-        self.path = path_to_local_audio_file
+        self.audio_file = audio_file
 
         self.source_language = source_language
         self.target_language = target_language

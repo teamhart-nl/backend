@@ -4,7 +4,7 @@ from definitions import API_BASE_URL, RESOURCES
 from src.helpers.Logger import Logger
 from src.helpers.LoadPhonemeJsonHelper import get_phoneme_patterns
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
-from src.models.request_data.TranslateRequest import TranslateRequest
+#from src.models.request_data.TranslateRequest import TranslateRequest
 from src.models.request_data.TranscribeAndTranslateRequest import TranscribeAndTranslateRequest
 from src.routes.RouteValidation import validate_json
 
@@ -98,7 +98,7 @@ def send_sentences():
     data = request.json
 
     # issue translate event
-    translate_request = TranslateRequest(original_sentences=data['sentences'], source_language=data['language'])
+    translate_request = TranscribeAndTranslateRequest(original_sentences=data['sentences'], source_language=data['language'])
     try:
         translate_request = dispatcher.handle(translate_request)
     except RuntimeError:
@@ -133,7 +133,7 @@ def send_audiopath():
 
     # issue translate event
     transcribe_translate_request = TranscribeAndTranslateRequest(
-        audio_file,
+        audio_file=audio_file,
         source_language=data['source_language'],
         target_language=data['target_language'])
     try:
@@ -183,7 +183,7 @@ def send_audiofile():
 
     # issue translate event
     transcribe_translate_request = TranscribeAndTranslateRequest(
-        file,
+        audio_file=file,
         source_language=data['source_language'],
         target_language=data['target_language'])
     try:

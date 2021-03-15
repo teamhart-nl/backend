@@ -70,11 +70,12 @@ class PhonemeDecompositionEvent(AbstractEvent):
 
                     # check if there are valid decompositions
                     if len(valid_decompositions) == 0:
-                        raise KeyError("No decompositions in CMU Phonemes with Reed equivalent")
+                        Logger.log_warning("PhonemeDecompositionEvent.handle: Word '" + str(word).lower()
+                                       + "' has no decompositions in CMU Phonemes with Reed equivalent")
 
                     # set phoneme translation to request data
                     sentence_decomposition.append(valid_decompositions)
-                except KeyError:
+                except KeyError as e:
                     # If the word is not in the Arpabet/ no valid decompositions, continue processing, but log warning
                     Logger.log_warning("PhonemeDecompositionEvent.handle: Word '" + str(word).lower()
                                        + "' was not found in Arpabet dictionary.")

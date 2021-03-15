@@ -48,4 +48,6 @@ if PRODUCTION:
 
 
 if __name__ == "__main__" and PRODUCTION:
+    import webbrowser
+    webbrowser.open("http://localhost:5000")
     app.run(debug=False, use_reloader=False, threaded=True)

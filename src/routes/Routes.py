@@ -4,7 +4,6 @@ from definitions import API_BASE_URL, RESOURCES
 from src.helpers.Logger import Logger
 from src.helpers.LoadPhonemeJsonHelper import get_phoneme_patterns
 from src.models.request_data.PhonemeTransformRequest import PhonemeTransformRequest
-#from src.models.request_data.TranslateRequest import TranslateRequest
 from src.models.request_data.TranscribeAndTranslateRequest import TranscribeAndTranslateRequest
 from src.routes.RouteValidation import validate_json
 
@@ -25,6 +24,7 @@ def phonemes():
     """
     GET list of available phonemes
     """
+    Logger.log_info("INCOMING API CALL: /phonemes")
 
     # all keys are available phonemes
     available = list(get_phoneme_patterns(RESOURCES).keys())
@@ -39,6 +39,7 @@ def send_phonemes():
     """
     POST sending phoneme(s) to the microcontroller
     """
+    Logger.log_info("INCOMING API CALL: /microcontroller/phonemes")
 
     # get body from api
     data = request.json
@@ -67,6 +68,7 @@ def send_words():
     """
     POST send word(s) to the microcontroller
     """
+    Logger.log_info("INCOMING API CALL: /microcontroller/words")
 
     # get body from api
     data = request.json
@@ -93,6 +95,7 @@ def send_sentences():
     """
     POST send sentence(s) to the microcontroller
     """
+    Logger.log_info("INCOMING API CALL: /microcontroller/sentences")
 
     # get body from api
     data = request.json
@@ -119,12 +122,19 @@ def send_sentences():
     # send return, success code
     return jsonify(result), 200
 
+
+# =============================================================================
+#  AUDIO
+# =============================================================================
+
+
 @app.route(API_BASE_URL + "/microcontroller/audiopath", methods=['POST'])
 @validate_json
 def send_audiopath():
     """
     POST send audiopath of audio to be transcribed, translated and sent to the microcontroller
     """
+    Logger.log_info("INCOMING API CALL: /microcontroller/audiopath")
 
     # get body from api
     data = request.json
@@ -163,8 +173,7 @@ def send_audiofile():
     """
     POST send audiofile of audio to be transcribed, translated and sent to the microcontroller
     """
-
-    print(request.files)
+    Logger.log_info("INCOMING API CALL: /microcontroller/audiofile")
 
     # check if the post request has the audiofile
     if 'file' not in request.files:

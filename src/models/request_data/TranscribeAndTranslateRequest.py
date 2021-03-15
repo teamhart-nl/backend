@@ -34,6 +34,22 @@ class TranscribeAndTranslateRequest(AbstractRequest):
 
     def __init__(self, audio_file: BinaryIO = None, original_sentences: List[str] = None,
                 source_language: str = None, target_language: str = 'en'):
+        """
+        Constructor to make object for transcribing and/or translating text/sentences. This constructor has 2 purposes:
+            (1) To create a TranscribeAndTransalteRequest with the purpose of transcribing 
+                an audiofile and then translating
+            (2) To create a TranscribeAndTransalteRequest with the purpose of translating 
+                given sentences.
+
+        Function throws an error when neither audiofile or original_sentences are set. If both are set, it
+        eventually overwritesthe given sentences with the transcription.
+
+        @param audio_file           Bitewise fileobject of flac file
+        @param original_sentences   ["list of sentences", "as strings each"]
+
+        @raises ValueError          If neither audio_file and original_sentences filled 
+                                    or when source_language is None
+        """
 
         # source language needs to be set
         if not source_language:

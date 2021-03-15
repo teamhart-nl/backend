@@ -8,7 +8,6 @@ from typing import List
 from src.helpers.Logger import Logger
 from src.models.EventTypeEnum import EventType
 from src.models.request_data.AbstractRequest import AbstractRequest
-from src.models.request_data.TranslateRequest import TranslateRequest
 from src.modules.google_api.GoogleApiWrapper import GoogleApiWrapper
 
 

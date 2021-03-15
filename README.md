@@ -22,7 +22,7 @@ For running the application in production mode
 4. Change the links in the `index.html` referring to js/img/css files by adding the prefix `static/`
 5. Change the `PRODUCTION` boolean in the `definitions.py` file to `True`.
 6. (optional) Change the `debug` option in the `arduino_config.json`. 
-7. Generate the distribution using the command `pyinstaller --add-data "resources;resources" --add-data "templates;templates" --add-data "static;static" app.py`
+7. Generate the distribution using the command `pyinstaller --add-data "resources;resources" --add-data "templates;templates" --add-data "static;static" --icon="static\favicon.ico" app.py`
 
 # API Specification
 
